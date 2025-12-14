@@ -5,3 +5,10 @@ services:
       dockerfile: ./apps/api-gateway/Dockerfile
     ports:
       - "5001:5001"
+
+  auth-service:
+    build:
+      context: .
+      dockerfile: ./apps/auth-service/Dockerfile
+    ports:
+      - "5002:5002"
