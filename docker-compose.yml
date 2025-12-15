@@ -12,3 +12,10 @@ services:
       dockerfile: ./apps/auth-service/Dockerfile
     ports:
       - "5002:5002"
+
+  user-service:
+    build:
+      context: .
+      dockerfile: ./apps/user-service/Dockerfile
+    ports:
+      - "5003:5003"

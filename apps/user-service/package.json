@@ -1,5 +1,5 @@
 {
-  "name": "auth-service",
+  "name": "user-service",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -14,12 +14,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@repo/config": "^1.0.0",
     "@repo/rabbitmq": "^1.0.0",
-    "@types/cookie-parser": "^1.4.10",
     "@types/express": "^5.0.6",
-    "axios": "^1.13.2",
-    "cookie-parser": "^1.4.7",
+    "amqplib": "^0.10.9",
     "express": "^5.2.1",
     "mongoose": "^9.0.1"
   }
