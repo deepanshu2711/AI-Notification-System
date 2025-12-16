@@ -8,5 +8,4 @@ const userSchema = new Schema(
   { timestamps: true },
 );
 
-userSchema.index({ globalUserId: 1 }, { unique: true });
 export const User = mongoose.model("user", userSchema);

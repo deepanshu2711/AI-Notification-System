@@ -1,8 +1,5 @@
 import { connect } from "amqplib";
-import dotenv from "dotenv";
 import type { Channel } from "amqplib";
-
-dotenv.config();
 
 type RabbitConnection = Awaited<ReturnType<typeof connect>>;
 

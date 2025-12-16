@@ -25,6 +25,7 @@ RUN npm ci --only=production && npm cache clean --force
 
 # Copy built files
 COPY --from=builder /app/apps/user-service/dist ./dist
+COPY --from=builder /app/packages/rabbitmq ./node_modules/@repo/rabbitmq
 
 # Expose port
 EXPOSE 5003

@@ -19,3 +19,10 @@ services:
       dockerfile: ./apps/user-service/Dockerfile
     ports:
       - "5003:5003"
+
+  management-service:
+    build:
+      context: .
+      dockerfile: ./apps/management-service/Dockerfile
+    ports:
+      - "5004:5004"
