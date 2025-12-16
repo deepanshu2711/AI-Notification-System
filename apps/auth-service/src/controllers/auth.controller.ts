@@ -27,7 +27,7 @@ export const exchangeToken = asyncHandler(
 
 export const generateApiKey = asyncHandler(
   async (req: Request, res: Response) => {
-    const { globalUserId } = req.params;
+    const globalUserId = req.user!.globalUserId;
     const data = await AuthService.generateApiKey(globalUserId!);
     return successResponse(res, data);
   },

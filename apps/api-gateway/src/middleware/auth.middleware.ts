@@ -1,12 +1,10 @@
 import jwt from "jsonwebtoken";
-import { Request, Response, NextFunction } from "express";
-import { AppError } from "../../../packages/config/src/helpers";
+import { AppError } from "@repo/config/helpers";
+import type { Request, Response, NextFunction } from "express";
 
 interface JwtPayload {
   globalUserId: string;
-  // Add other fields as needed
 }
-
 declare global {
   namespace Express {
     interface Request {
@@ -14,7 +12,6 @@ declare global {
     }
   }
 }
-
 export const authMiddleware = (
   req: Request,
   res: Response,
@@ -24,7 +21,6 @@ export const authMiddleware = (
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
     return next(new AppError("Unauthorized", 401));
   }
-
   const token = authHeader.substring(7);
   try {
     const decoded = jwt.verify(
