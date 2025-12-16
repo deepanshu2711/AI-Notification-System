@@ -1,0 +1,39 @@
+import jwt from "jsonwebtoken";
+import { Request, Response, NextFunction } from "express";
+import { AppError } from "../../../packages/config/src/helpers";
+
+interface JwtPayload {
+  globalUserId: string;
+  // Add other fields as needed
+}
+
+declare global {
+  namespace Express {
+    interface Request {
+      user?: JwtPayload;
+    }
+  }
+}
+
+export const authMiddleware = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return next(new AppError("Unauthorized", 401));
+  }
+
+  const token = authHeader.substring(7);
+  try {
+    const decoded = jwt.verify(
+      token,
+      process.env.JWT_SECRET || "default-secret",
+    ) as JwtPayload;
+    req.user = decoded;
+    next();
+  } catch (error) {
+    return next(new AppError("Invalid token", 401));
+  }
+};

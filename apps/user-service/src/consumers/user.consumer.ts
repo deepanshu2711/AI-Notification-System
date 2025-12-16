@@ -1,5 +1,7 @@
 import type { ConsumeMessage } from "amqplib";
 import { RabbitMQ } from "../config/connection.js";
+import { createUserHandler } from "../handlers/createUser.handler.js";
+import { updateUserHandler } from "../handlers/updateUser.handler.js";
 
 export const userConsumer = async () => {
   const channel = await RabbitMQ.connect();
@@ -18,7 +20,7 @@ export const userConsumer = async () => {
     if (!msg) return;
     try {
       const data = JSON.parse(msg.content.toString());
-      console.log("User Created Data", data);
+      await createUserHandler(data);
       channel.ack(msg);
     } catch (error) {
       console.error("Failed to process create user message:", error);
@@ -30,7 +32,7 @@ export const userConsumer = async () => {
     if (!msg) return;
     try {
       const data = JSON.parse(msg.content.toString());
-      console.log("User Updated Data", data);
+      await updateUserHandler(data);
       channel.ack(msg);
     } catch (error) {
       console.error("Failed to process update user message:", error);

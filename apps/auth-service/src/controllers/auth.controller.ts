@@ -24,3 +24,11 @@ export const exchangeToken = asyncHandler(
     return successResponse(res, { accessToken });
   },
 );
+
+export const generateApiKey = asyncHandler(
+  async (req: Request, res: Response) => {
+    const { globalUserId } = req.params;
+    const data = await AuthService.generateApiKey(globalUserId!);
+    return successResponse(res, data);
+  },
+);
