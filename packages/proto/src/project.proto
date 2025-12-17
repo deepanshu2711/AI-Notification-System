@@ -1,0 +1,15 @@
+syntax="proto3";
+package project;
+
+service ProjectProtoService {
+  rpc CheckProjectExists(CheckProjectExistsRequest) returns (CheckProjectExistsResponse);
+}
+
+message CheckProjectExistsRequest {
+  string projectId =1;
+}
+
+message CheckProjectExistsResponse {
+  bool exists =1;
+}
+

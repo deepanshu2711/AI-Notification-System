@@ -1,0 +1,22 @@
+{
+  "name": "@repo/proto",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "exports": {
+    "./*": "./dist/*.js"
+  },
+  "scripts": {
+    "build": "npm run generate && tsc",
+    "generate": "grpc_tools_node_protoc --js_out=import_style=commonjs,binary:./src/generated --grpc_out=grpc_js:./src/generated --proto_path=./src ./src/project.proto && grpc_tools_node_protoc --plugin=protoc-gen-ts=../../node_modules/.bin/protoc-gen-ts --ts_out=./src/generated --proto_path=./src ./src/project.proto && sed -i '' 's/return super.CheckProjectExists(/return super.CheckProjectExists!(/' src/generated/project.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "*",
+    "@repo/typescript-config": "*",
+    "@types/google-protobuf": "^3.15.12",
+    "eslint": "^9.39.1",
+    "typescript": "5.9.2"
+  }
+}
