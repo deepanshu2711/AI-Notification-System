@@ -26,3 +26,10 @@ services:
       dockerfile: ./apps/management-service/Dockerfile
     ports:
       - "5004:5004"
+
+  notification-service:
+    build:
+      context: .
+      dockerfile: ./apps/notification-service/Dockerfile
+    ports:
+      - "5006:5006"

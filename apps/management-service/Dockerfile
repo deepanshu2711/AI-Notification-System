@@ -24,6 +24,7 @@ RUN npm ci --only=production && npm cache clean --force
 
 # Copy built files
 COPY --from=builder /app/apps/management-service/dist ./dist
+COPY --from=builder /app/packages/config ./node_modules/@repo/config
 
 # Expose port
 EXPOSE 5004
