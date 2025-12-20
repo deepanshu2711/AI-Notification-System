@@ -24,7 +24,7 @@ export const sendNotification = async (
   //NOTE: FIRST CHECK IF THIS PROJECT EXISTS FROM MANAGEMENT SERVICE
   const projectExists = await projectClient.checkProjectExists(projectId);
   if (!projectExists) throw new AppError("Project does not exist", 400);
-
+  //
   //NOTE: CREATE MESSAGE AND MESSAGE
   const createdMessage = await Message.create({
     projectId,
