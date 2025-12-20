@@ -1,27 +1,24 @@
-import type { ConsumeMessage } from "amqplib";
 import { RabbitMQ } from "../config/connection.js";
-import { sendEmailHandler } from "../handlers/sendEmail.handler.js";
+import type { ConsumeMessage } from "amqplib";
+import { messgaeEventHandler } from "../handlers/messageEvent.handler.js";
 
-export const emailConsumer = async () => {
+export const consumeMessageEvents = async () => {
   const channel = await RabbitMQ.connect();
-  const exchange = "NOTIFICATION_EXCHANGE";
+  const exchange = "MESSAGE_EVENT";
   await channel.assertExchange(exchange, "topic", { durable: true });
 
-  const queue = "email_queue";
+  const queue = "message_event_q";
   await channel.assertQueue(queue, { durable: true });
-  await channel.bindQueue(queue, exchange, "notification.email");
+  await channel.bindQueue(queue, exchange, "message.event.create");
 
   channel.consume(queue, async (msg: ConsumeMessage | null) => {
     if (!msg) return;
     const data = JSON.parse(msg.content.toString());
     try {
-      await sendEmailHandler(data);
+      await messgaeEventHandler(data);
       channel.ack(msg);
-    } catch (error) {
+    } catch (e) {
       channel.nack(msg);
-      console.log(error);
     }
   });
-
-  console.log("Email consumer started...");
 };
