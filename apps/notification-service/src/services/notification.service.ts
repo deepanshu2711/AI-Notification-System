@@ -40,5 +40,10 @@ export const sendNotification = async (
   });
 
   //NOTE: PUBLISH MESSAGE TO RABBITMQ
-  await publishNotification.publishNotification({ to });
+  await publishNotification.publishNotification({
+    to,
+    messageId: createdMessage._id,
+  });
+
+  return createdMessage;
 };
