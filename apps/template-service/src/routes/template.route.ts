@@ -7,6 +7,6 @@ export const templateRouter = express.Router();
 templateRouter.use(setTemplateMiddleware);
 
 templateRouter.post("/", TemplateContoller.createTemplate);
-templateRouter.get("/", TemplateContoller.getTemplateById);
+templateRouter.get("/", TemplateContoller.getTemplates);
 templateRouter.get("/:Id", TemplateContoller.getTemplateById);
 templateRouter.delete("/:Id", TemplateContoller.deleteTemplate);

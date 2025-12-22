@@ -2,7 +2,7 @@ import { model, Schema } from "mongoose";
 
 const ChannelSchema = new Schema(
   {
-    type: {
+    channel: {
       type: String,
       enum: ["email", "sms", "slack", "push"],
       required: true,

@@ -60,3 +60,29 @@ export const NotificationProxy = (
     createProxyMiddleware(proxyOptions)(req, res, next);
   }
 };
+
+export const ManagementProxy = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const proxyOptions = {
+    target: "http://localhost:5004",
+    changeOrigin: true,
+    pathRewrite: { "^/api/v1/management": "" },
+    cookieDomainRewrite: "",
+    onProxyReq: (proxyReq: any) => {
+      if (req.user) {
+        proxyReq.setHeader("x-global-user-Id", req.user.globalUserId);
+      }
+    },
+  };
+  if (!isPublicRoute(req.path)) {
+    authMiddleware(req, res, (err?: any) => {
+      if (err) return next(err);
+      createProxyMiddleware(proxyOptions)(req, res, next);
+    });
+  } else {
+    createProxyMiddleware(proxyOptions)(req, res, next);
+  }
+};

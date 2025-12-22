@@ -1,3 +1,5 @@
+import { Request, Response, NextFunction } from "express";
+
 type AsyncRouteHandler = (...args: any[]) => Promise<any> | any;
 
 export const asyncHandler = (fn: AsyncRouteHandler) => {
@@ -20,3 +22,21 @@ export class AppError extends Error {
     Object.setPrototypeOf(this, AppError.prototype);
   }
 }
+
+export const errorMiddleware = (
+  err: any,
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  console.error("Error:", err);
+
+  const statusCode = err.statusCode || 500;
+  const message = err.message || "Internal Server Error";
+
+  res.status(statusCode).json({
+    success: false,
+    message,
+    ...(process.env.NODE_ENV === "development" && { stack: err.stack }),
+  });
+};
