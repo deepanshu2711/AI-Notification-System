@@ -1,0 +1,15 @@
+syntax="proto3";
+package ai;
+
+service AiProtoService {
+  rpc GenerateContent(GenerateContentRequest) returns (GenerateContentResponse); 
+} 
+
+message GenerateContentRequest {
+  string prompt =1;
+}
+
+message GenerateContentResponse {
+  string content =1; 
+}
+
