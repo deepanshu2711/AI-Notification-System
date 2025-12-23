@@ -48,7 +48,7 @@ export const getTemplates = async (globalUserId: string) => {
 };
 
 export const getTemplateById = async (templateId: string) => {
-  const template = await Template.findById(templateId);
+  const template = await Template.findById(templateId).lean();
   return template;
 };
 

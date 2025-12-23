@@ -9,7 +9,7 @@
   },
   "scripts": {
     "build": "npm run generate && tsc",
-    "generate": "grpc_tools_node_protoc --js_out=import_style=commonjs,binary:./src/generated --grpc_out=grpc_js:./src/generated --proto_path=./src ./src/project.proto && grpc_tools_node_protoc --plugin=protoc-gen-ts=../../node_modules/.bin/protoc-gen-ts --ts_out=./src/generated --proto_path=./src ./src/project.proto && sed -i '' 's/return super.CheckProjectExists(/return super.CheckProjectExists!(/' src/generated/project.ts",
+    "generate": "grpc_tools_node_protoc --js_out=import_style=commonjs,binary:./src/generated --grpc_out=grpc_js:./src/generated --ts_out=./src/generated --proto_path=./src ./src/*.proto && perl -0777 -i -pe 's/return super\\.([A-Za-z0-9_]+)\\(/return super.$1!\\(/g' src/generated/*.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {

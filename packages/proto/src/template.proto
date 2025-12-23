@@ -1,0 +1,29 @@
+syntax="proto3";
+package template;
+
+service TemplateProtoService {
+  rpc GetTemplateDetails(GetTemplateDetailsRequest) returns (GetTemplateDetailsResponse);
+}
+
+
+message GetTemplateDetailsRequest {
+  string templateId =1;
+}
+
+message TemplateContent {
+  string subject = 1;
+  string body = 2;
+}
+
+message GetTemplateDetailsResponse {
+  string id = 1;
+  string name = 2;
+  string channel = 3;
+  TemplateContent content = 4;
+  string variables = 5;   
+  bool aiGenerated = 6;
+  string globalUserId = 7;
+  string projectId = 8;
+  string createdAt = 9;
+  string updatedAt = 10;
+}

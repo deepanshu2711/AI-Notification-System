@@ -3,8 +3,10 @@ import { ProjectClient } from "../clients/projectClient.js";
 import { Message } from "../models/message.model.js";
 import { NotificationProducer } from "../producers/notification.producer.js";
 import { MessageEvent } from "../models/messageEvent.model.js";
+import { TemplateClient } from "../clients/templateClient.js";
 
 const projectClient = new ProjectClient();
+const templateClient = new TemplateClient();
 const publishNotification = new NotificationProducer();
 
 type ChannelInput = {
@@ -25,7 +27,11 @@ export const sendNotification = async (
   //NOTE: FIRST CHECK IF THIS PROJECT EXISTS FROM MANAGEMENT SERVICE
   const projectExists = await projectClient.checkProjectExists(projectId);
   if (projectExists) throw new AppError("Project does not exist", 400);
-  //
+
+  //NOTE: CHECK TEMPLATE EXIST LOGIC HERE
+  const template = await templateClient.getTemplateDetails(templateId);
+  if (!template) throw new AppError("Template does not exist", 400);
+
   //NOTE: CREATE MESSAGE AND MESSAGE
   const createdMessage = await Message.create({
     projectId,

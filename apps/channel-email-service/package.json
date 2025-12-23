@@ -14,7 +14,13 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@grpc/grpc-js": "^1.14.3",
     "@repo/config": "^1.0.0",
-    "@repo/rabbitmq": "^1.0.0"
+    "@repo/rabbitmq": "^1.0.0",
+    "dotenv": "^16.0.3",
+    "nodemailer": "^7.0.12"
+  },
+  "devDependencies": {
+    "@types/nodemailer": "^7.0.4"
   }
 }
