@@ -1,29 +1,54 @@
 import { geminiAi } from "../config/gemeni.js";
 
 export const generateContent = async (
-  prompt: string,
-  templateContent: { subject: string; body: string },
+  template: any,
   varibles: Record<string, string>,
 ) => {
-  if (!prompt || !prompt.trim()) {
-    throw new Error("Prompt cannot be empty");
+  if (!template || typeof template !== "object") {
+    throw new Error("Invalid template");
   }
 
+  if (!template.content || typeof template.content !== "object") {
+    throw new Error("Invalid template content");
+  }
+
+  const content = template.content;
+
   if (
-    !templateContent ||
-    typeof templateContent !== "object" ||
-    !templateContent.subject ||
-    !templateContent.body
+    !content.systemPrompt ||
+    !content.userPrompt ||
+    !content.tone ||
+    !content.maxLength
   ) {
     throw new Error(
-      "Invalid templateContent: must be an object with subject and body strings",
+      "Invalid AI template content: must include systemPrompt, userPrompt, tone, and maxLength",
     );
   }
 
-  console.log("varibales", varibles);
+  console.log("variables", varibles);
+
+  const staticPrompt = `You are a professional notification assistant.
+Your task is to generate clear, accurate, and engaging messages based on the provided context and variables.
+
+Rules:
+- Use ONLY the variables provided to you; do not invent or assume missing information.
+- Replace variables naturally in the message where appropriate.
+- Match the requested tone and communication style.
+- Ensure the message is clear, concise, and easy to understand.
+- Follow best practices for the specified communication channel.
+- Do not include explanations, placeholders, or variable names in the final output.
+- Return only the final message content.`;
 
   const fullPrompt = `
-${prompt}
+System: ${content?.systemPrompt || staticPrompt}
+
+User: ${content.userPrompt}
+
+Variables (JSON):
+${JSON.stringify(varibles, null, 2)}
+
+Tone: ${content.tone}
+Max Length: ${content.maxLength} characters
 
 You MUST return ONLY valid JSON.
 NO explanations.
@@ -35,12 +60,6 @@ JSON format:
   "subject": "string",
   "body": "string"
 }
-
-Dummy Subject: ${templateContent.subject}
-Dummy Body: ${templateContent.body}
-
-use these variables only
-variables: ${varibles}
 `;
 
   try {

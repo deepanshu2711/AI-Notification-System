@@ -1,4 +1,4 @@
-// NOTE:
+// NOTE: For non-AI templates:
 // {
 //   name: Order Confirmation Email,
 //   channel: email,
@@ -14,7 +14,25 @@
 //     deliveryDate: { type: string, description: Expected delivery date (YYYY-MM-DD) }
 //   },
 //   projectId: proj_abc123,
-//   aiGenerate: false
+//   aiGenerated: false
+// }
+
+// NOTE: For AI templates:
+// {
+//   name: Order Confirmation Email,
+//   channel: email,
+//   content: {
+//     systemPrompt: "You are a notification writing assistant",
+//     userPrompt: "Write a {{channel}} message for {{event}}",
+//     tone: "professional",
+//     maxLength: 120
+//   },
+//   variables: {
+//     channel: { type: string, description: Channel type, required: true },
+//     event: { type: string, description: Event description, required: true }
+//   },
+//   projectId: proj_abc123,
+//   aiGenerated: true
 // }
 
 import { Template } from "../models/template.model.js";
@@ -22,10 +40,11 @@ import { Template } from "../models/template.model.js";
 export const createTemplate = async (
   name: string,
   channel: string,
-  content: string,
-  variables: string,
+  content: any,
+  variables: any,
   projectId: string,
   globalUserId: string,
+  aiGenerated: boolean = false,
 ) => {
   //NOTE: check for prpject existance
 
@@ -37,6 +56,7 @@ export const createTemplate = async (
     variables,
     projectId,
     globalUserId,
+    aiGenerated,
   });
 
   return template;

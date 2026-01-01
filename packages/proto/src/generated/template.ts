@@ -78,6 +78,10 @@ export namespace template {
         constructor(data?: any[] | {
             subject?: string;
             body?: string;
+            systemPrompt?: string;
+            userPrompt?: string;
+            tone?: string;
+            maxLength?: number;
         }) {
             super();
             pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
@@ -87,6 +91,18 @@ export namespace template {
                 }
                 if ("body" in data && data.body != undefined) {
                     this.body = data.body;
+                }
+                if ("systemPrompt" in data && data.systemPrompt != undefined) {
+                    this.systemPrompt = data.systemPrompt;
+                }
+                if ("userPrompt" in data && data.userPrompt != undefined) {
+                    this.userPrompt = data.userPrompt;
+                }
+                if ("tone" in data && data.tone != undefined) {
+                    this.tone = data.tone;
+                }
+                if ("maxLength" in data && data.maxLength != undefined) {
+                    this.maxLength = data.maxLength;
                 }
             }
         }
@@ -102,9 +118,37 @@ export namespace template {
         set body(value: string) {
             pb_1.Message.setField(this, 2, value);
         }
+        get systemPrompt() {
+            return pb_1.Message.getFieldWithDefault(this, 3, "") as string;
+        }
+        set systemPrompt(value: string) {
+            pb_1.Message.setField(this, 3, value);
+        }
+        get userPrompt() {
+            return pb_1.Message.getFieldWithDefault(this, 4, "") as string;
+        }
+        set userPrompt(value: string) {
+            pb_1.Message.setField(this, 4, value);
+        }
+        get tone() {
+            return pb_1.Message.getFieldWithDefault(this, 5, "") as string;
+        }
+        set tone(value: string) {
+            pb_1.Message.setField(this, 5, value);
+        }
+        get maxLength() {
+            return pb_1.Message.getFieldWithDefault(this, 6, 0) as number;
+        }
+        set maxLength(value: number) {
+            pb_1.Message.setField(this, 6, value);
+        }
         static fromObject(data: {
             subject?: string;
             body?: string;
+            systemPrompt?: string;
+            userPrompt?: string;
+            tone?: string;
+            maxLength?: number;
         }): TemplateContent {
             const message = new TemplateContent({});
             if (data.subject != null) {
@@ -113,18 +157,46 @@ export namespace template {
             if (data.body != null) {
                 message.body = data.body;
             }
+            if (data.systemPrompt != null) {
+                message.systemPrompt = data.systemPrompt;
+            }
+            if (data.userPrompt != null) {
+                message.userPrompt = data.userPrompt;
+            }
+            if (data.tone != null) {
+                message.tone = data.tone;
+            }
+            if (data.maxLength != null) {
+                message.maxLength = data.maxLength;
+            }
             return message;
         }
         toObject() {
             const data: {
                 subject?: string;
                 body?: string;
+                systemPrompt?: string;
+                userPrompt?: string;
+                tone?: string;
+                maxLength?: number;
             } = {};
             if (this.subject != null) {
                 data.subject = this.subject;
             }
             if (this.body != null) {
                 data.body = this.body;
+            }
+            if (this.systemPrompt != null) {
+                data.systemPrompt = this.systemPrompt;
+            }
+            if (this.userPrompt != null) {
+                data.userPrompt = this.userPrompt;
+            }
+            if (this.tone != null) {
+                data.tone = this.tone;
+            }
+            if (this.maxLength != null) {
+                data.maxLength = this.maxLength;
             }
             return data;
         }
@@ -136,6 +208,14 @@ export namespace template {
                 writer.writeString(1, this.subject);
             if (this.body.length)
                 writer.writeString(2, this.body);
+            if (this.systemPrompt.length)
+                writer.writeString(3, this.systemPrompt);
+            if (this.userPrompt.length)
+                writer.writeString(4, this.userPrompt);
+            if (this.tone.length)
+                writer.writeString(5, this.tone);
+            if (this.maxLength != 0)
+                writer.writeInt32(6, this.maxLength);
             if (!w)
                 return writer.getResultBuffer();
         }
@@ -150,6 +230,18 @@ export namespace template {
                         break;
                     case 2:
                         message.body = reader.readString();
+                        break;
+                    case 3:
+                        message.systemPrompt = reader.readString();
+                        break;
+                    case 4:
+                        message.userPrompt = reader.readString();
+                        break;
+                    case 5:
+                        message.tone = reader.readString();
+                        break;
+                    case 6:
+                        message.maxLength = reader.readInt32();
                         break;
                     default: reader.skipField();
                 }

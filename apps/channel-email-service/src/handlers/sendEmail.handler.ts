@@ -34,7 +34,7 @@ export const sendEmailHandler = async (data: any) => {
     const template = templateResponse.toObject();
     let { subject, body } = template.content ?? {};
 
-    if (!body) {
+    if (!template.aiGenerated && !body) {
       throw new AppError("Email body is empty", 400);
     }
 
@@ -50,29 +50,14 @@ export const sendEmailHandler = async (data: any) => {
         );
       };
       subject = subject ? replaceVariables(subject, data.variables) : subject;
-      body = replaceVariables(body, data.variables);
+      body = replaceVariables(body!, data.variables);
     } else {
-      const staticPrompt =
-        "Using the provided dummy email subject and body as a template, generate a new personalized subject and body based on the user's prompt. Respond only with a valid JSON object containing 'subject' and 'body' keys.";
-
       // For AI templates: generate personalized content
       const aiContent = await aiClient.generateContent(
-        staticPrompt,
         data.variables,
-        {
-          id: template.id!,
-          name: template.name!,
-          channel: template.channel!,
-          content: {
-            body: template.content?.body!,
-            subject: template.content?.subject!,
-          }!,
-          variables: template.variables || "",
-          aiGenerated: true,
-          globalUserId: template.globalUserId!,
-          projectId: template.projectId!,
-        },
+        template,
       );
+
       body = aiContent.body;
       subject = aiContent.subject;
       // body = await aiClient.generateContent(

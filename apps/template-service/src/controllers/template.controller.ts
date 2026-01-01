@@ -5,8 +5,15 @@ import { successResponse } from "@repo/config/responses";
 
 export const createTemplate = asyncHandler(
   async (req: Request, res: Response) => {
-    const { name, channel, content, variables, projectId, globalUserId } =
-      req.body;
+    const {
+      name,
+      channel,
+      content,
+      variables,
+      projectId,
+      globalUserId,
+      aiGenerated,
+    } = req.body;
 
     const data = await TemplateSercvice.createTemplate(
       name,
@@ -15,6 +22,7 @@ export const createTemplate = asyncHandler(
       variables,
       projectId,
       globalUserId,
+      aiGenerated,
     );
     return successResponse(res, data);
   },

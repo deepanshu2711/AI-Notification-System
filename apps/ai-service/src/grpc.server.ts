@@ -10,8 +10,9 @@ class AiProtoServiceImp extends ai.UnimplementedAiProtoServiceService {
     >,
     callback: grpc.sendUnaryData<ai.GenerateContentResponse>,
   ): void {
-    const { prompt, variables, template } = call.request;
-    generateContent(prompt, template.content, variables)
+    const { variables, template } = call.request;
+    const variablesRecord = Object.fromEntries(variables);
+    generateContent(template, variablesRecord)
       .then((data) => {
         const emailContent = new ai.EmailContent({
           body: data.body,

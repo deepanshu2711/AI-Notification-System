@@ -17,14 +17,19 @@ message Template {
 }
 
 message TemplateContent {
+  // For non-AI templates
   string subject = 1;
   string body = 2;
+  // For AI templates
+  string systemPrompt = 3;
+  string userPrompt = 4;
+  string tone = 5;
+  int32 maxLength = 6;
 }
 
 message GenerateContentRequest {
-  string prompt = 1; 
-  Template template = 2; 
-  map<string, string> variables = 3; 
+  Template template = 1;
+  map<string, string> variables = 2;
 }
 
 message EmailContent {

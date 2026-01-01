@@ -250,7 +250,11 @@ proto.template.TemplateContent.prototype.toObject = function(opt_includeInstance
 proto.template.TemplateContent.toObject = function(includeInstance, msg) {
   var f, obj = {
     subject: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    body: jspb.Message.getFieldWithDefault(msg, 2, "")
+    body: jspb.Message.getFieldWithDefault(msg, 2, ""),
+    systemprompt: jspb.Message.getFieldWithDefault(msg, 3, ""),
+    userprompt: jspb.Message.getFieldWithDefault(msg, 4, ""),
+    tone: jspb.Message.getFieldWithDefault(msg, 5, ""),
+    maxlength: jspb.Message.getFieldWithDefault(msg, 6, 0)
   };
 
   if (includeInstance) {
@@ -295,6 +299,22 @@ proto.template.TemplateContent.deserializeBinaryFromReader = function(msg, reade
       var value = /** @type {string} */ (reader.readString());
       msg.setBody(value);
       break;
+    case 3:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setSystemprompt(value);
+      break;
+    case 4:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setUserprompt(value);
+      break;
+    case 5:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setTone(value);
+      break;
+    case 6:
+      var value = /** @type {number} */ (reader.readInt32());
+      msg.setMaxlength(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -338,6 +358,34 @@ proto.template.TemplateContent.serializeBinaryToWriter = function(message, write
       f
     );
   }
+  f = message.getSystemprompt();
+  if (f.length > 0) {
+    writer.writeString(
+      3,
+      f
+    );
+  }
+  f = message.getUserprompt();
+  if (f.length > 0) {
+    writer.writeString(
+      4,
+      f
+    );
+  }
+  f = message.getTone();
+  if (f.length > 0) {
+    writer.writeString(
+      5,
+      f
+    );
+  }
+  f = message.getMaxlength();
+  if (f !== 0) {
+    writer.writeInt32(
+      6,
+      f
+    );
+  }
 };
 
 
@@ -374,6 +422,78 @@ proto.template.TemplateContent.prototype.getBody = function() {
  */
 proto.template.TemplateContent.prototype.setBody = function(value) {
   return jspb.Message.setProto3StringField(this, 2, value);
+};
+
+
+/**
+ * optional string systemPrompt = 3;
+ * @return {string}
+ */
+proto.template.TemplateContent.prototype.getSystemprompt = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 3, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.template.TemplateContent} returns this
+ */
+proto.template.TemplateContent.prototype.setSystemprompt = function(value) {
+  return jspb.Message.setProto3StringField(this, 3, value);
+};
+
+
+/**
+ * optional string userPrompt = 4;
+ * @return {string}
+ */
+proto.template.TemplateContent.prototype.getUserprompt = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 4, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.template.TemplateContent} returns this
+ */
+proto.template.TemplateContent.prototype.setUserprompt = function(value) {
+  return jspb.Message.setProto3StringField(this, 4, value);
+};
+
+
+/**
+ * optional string tone = 5;
+ * @return {string}
+ */
+proto.template.TemplateContent.prototype.getTone = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 5, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.template.TemplateContent} returns this
+ */
+proto.template.TemplateContent.prototype.setTone = function(value) {
+  return jspb.Message.setProto3StringField(this, 5, value);
+};
+
+
+/**
+ * optional int32 maxLength = 6;
+ * @return {number}
+ */
+proto.template.TemplateContent.prototype.getMaxlength = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 6, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.template.TemplateContent} returns this
+ */
+proto.template.TemplateContent.prototype.setMaxlength = function(value) {
+  return jspb.Message.setProto3IntField(this, 6, value);
 };
 
 

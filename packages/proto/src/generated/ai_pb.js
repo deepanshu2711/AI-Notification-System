@@ -525,7 +525,11 @@ proto.ai.TemplateContent.prototype.toObject = function(opt_includeInstance) {
 proto.ai.TemplateContent.toObject = function(includeInstance, msg) {
   var f, obj = {
     subject: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    body: jspb.Message.getFieldWithDefault(msg, 2, "")
+    body: jspb.Message.getFieldWithDefault(msg, 2, ""),
+    systemprompt: jspb.Message.getFieldWithDefault(msg, 3, ""),
+    userprompt: jspb.Message.getFieldWithDefault(msg, 4, ""),
+    tone: jspb.Message.getFieldWithDefault(msg, 5, ""),
+    maxlength: jspb.Message.getFieldWithDefault(msg, 6, 0)
   };
 
   if (includeInstance) {
@@ -570,6 +574,22 @@ proto.ai.TemplateContent.deserializeBinaryFromReader = function(msg, reader) {
       var value = /** @type {string} */ (reader.readString());
       msg.setBody(value);
       break;
+    case 3:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setSystemprompt(value);
+      break;
+    case 4:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setUserprompt(value);
+      break;
+    case 5:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setTone(value);
+      break;
+    case 6:
+      var value = /** @type {number} */ (reader.readInt32());
+      msg.setMaxlength(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -613,6 +633,34 @@ proto.ai.TemplateContent.serializeBinaryToWriter = function(message, writer) {
       f
     );
   }
+  f = message.getSystemprompt();
+  if (f.length > 0) {
+    writer.writeString(
+      3,
+      f
+    );
+  }
+  f = message.getUserprompt();
+  if (f.length > 0) {
+    writer.writeString(
+      4,
+      f
+    );
+  }
+  f = message.getTone();
+  if (f.length > 0) {
+    writer.writeString(
+      5,
+      f
+    );
+  }
+  f = message.getMaxlength();
+  if (f !== 0) {
+    writer.writeInt32(
+      6,
+      f
+    );
+  }
 };
 
 
@@ -652,6 +700,78 @@ proto.ai.TemplateContent.prototype.setBody = function(value) {
 };
 
 
+/**
+ * optional string systemPrompt = 3;
+ * @return {string}
+ */
+proto.ai.TemplateContent.prototype.getSystemprompt = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 3, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.ai.TemplateContent} returns this
+ */
+proto.ai.TemplateContent.prototype.setSystemprompt = function(value) {
+  return jspb.Message.setProto3StringField(this, 3, value);
+};
+
+
+/**
+ * optional string userPrompt = 4;
+ * @return {string}
+ */
+proto.ai.TemplateContent.prototype.getUserprompt = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 4, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.ai.TemplateContent} returns this
+ */
+proto.ai.TemplateContent.prototype.setUserprompt = function(value) {
+  return jspb.Message.setProto3StringField(this, 4, value);
+};
+
+
+/**
+ * optional string tone = 5;
+ * @return {string}
+ */
+proto.ai.TemplateContent.prototype.getTone = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 5, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.ai.TemplateContent} returns this
+ */
+proto.ai.TemplateContent.prototype.setTone = function(value) {
+  return jspb.Message.setProto3StringField(this, 5, value);
+};
+
+
+/**
+ * optional int32 maxLength = 6;
+ * @return {number}
+ */
+proto.ai.TemplateContent.prototype.getMaxlength = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 6, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.ai.TemplateContent} returns this
+ */
+proto.ai.TemplateContent.prototype.setMaxlength = function(value) {
+  return jspb.Message.setProto3IntField(this, 6, value);
+};
+
+
 
 
 
@@ -684,7 +804,6 @@ proto.ai.GenerateContentRequest.prototype.toObject = function(opt_includeInstanc
  */
 proto.ai.GenerateContentRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    prompt: jspb.Message.getFieldWithDefault(msg, 1, ""),
     template: (f = msg.getTemplate()) && proto.ai.Template.toObject(includeInstance, f),
     variablesMap: (f = msg.getVariablesMap()) ? f.toObject(includeInstance, undefined) : []
   };
@@ -724,15 +843,11 @@ proto.ai.GenerateContentRequest.deserializeBinaryFromReader = function(msg, read
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
-      msg.setPrompt(value);
-      break;
-    case 2:
       var value = new proto.ai.Template;
       reader.readMessage(value,proto.ai.Template.deserializeBinaryFromReader);
       msg.setTemplate(value);
       break;
-    case 3:
+    case 2:
       var value = msg.getVariablesMap();
       reader.readMessage(value, function(message, reader) {
         jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readString, jspb.BinaryReader.prototype.readString, null, "", "");
@@ -767,53 +882,28 @@ proto.ai.GenerateContentRequest.prototype.serializeBinary = function() {
  */
 proto.ai.GenerateContentRequest.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
-  f = message.getPrompt();
-  if (f.length > 0) {
-    writer.writeString(
-      1,
-      f
-    );
-  }
   f = message.getTemplate();
   if (f != null) {
     writer.writeMessage(
-      2,
+      1,
       f,
       proto.ai.Template.serializeBinaryToWriter
     );
   }
   f = message.getVariablesMap(true);
   if (f && f.getLength() > 0) {
-    f.serializeBinary(3, writer, jspb.BinaryWriter.prototype.writeString, jspb.BinaryWriter.prototype.writeString);
+    f.serializeBinary(2, writer, jspb.BinaryWriter.prototype.writeString, jspb.BinaryWriter.prototype.writeString);
   }
 };
 
 
 /**
- * optional string prompt = 1;
- * @return {string}
- */
-proto.ai.GenerateContentRequest.prototype.getPrompt = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
-};
-
-
-/**
- * @param {string} value
- * @return {!proto.ai.GenerateContentRequest} returns this
- */
-proto.ai.GenerateContentRequest.prototype.setPrompt = function(value) {
-  return jspb.Message.setProto3StringField(this, 1, value);
-};
-
-
-/**
- * optional Template template = 2;
+ * optional Template template = 1;
  * @return {?proto.ai.Template}
  */
 proto.ai.GenerateContentRequest.prototype.getTemplate = function() {
   return /** @type{?proto.ai.Template} */ (
-    jspb.Message.getWrapperField(this, proto.ai.Template, 2));
+    jspb.Message.getWrapperField(this, proto.ai.Template, 1));
 };
 
 
@@ -822,7 +912,7 @@ proto.ai.GenerateContentRequest.prototype.getTemplate = function() {
  * @return {!proto.ai.GenerateContentRequest} returns this
 */
 proto.ai.GenerateContentRequest.prototype.setTemplate = function(value) {
-  return jspb.Message.setWrapperField(this, 2, value);
+  return jspb.Message.setWrapperField(this, 1, value);
 };
 
 
@@ -840,19 +930,19 @@ proto.ai.GenerateContentRequest.prototype.clearTemplate = function() {
  * @return {boolean}
  */
 proto.ai.GenerateContentRequest.prototype.hasTemplate = function() {
-  return jspb.Message.getField(this, 2) != null;
+  return jspb.Message.getField(this, 1) != null;
 };
 
 
 /**
- * map<string, string> variables = 3;
+ * map<string, string> variables = 2;
  * @param {boolean=} opt_noLazyCreate Do not create the map if
  * empty, instead returning `undefined`
  * @return {!jspb.Map<string,string>}
  */
 proto.ai.GenerateContentRequest.prototype.getVariablesMap = function(opt_noLazyCreate) {
   return /** @type {!jspb.Map<string,string>} */ (
-      jspb.Message.getMapField(this, 3, opt_noLazyCreate,
+      jspb.Message.getMapField(this, 2, opt_noLazyCreate,
       null));
 };
 

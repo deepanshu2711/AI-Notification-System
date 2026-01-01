@@ -242,6 +242,10 @@ export namespace ai {
         constructor(data?: any[] | {
             subject?: string;
             body?: string;
+            systemPrompt?: string;
+            userPrompt?: string;
+            tone?: string;
+            maxLength?: number;
         }) {
             super();
             pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
@@ -251,6 +255,18 @@ export namespace ai {
                 }
                 if ("body" in data && data.body != undefined) {
                     this.body = data.body;
+                }
+                if ("systemPrompt" in data && data.systemPrompt != undefined) {
+                    this.systemPrompt = data.systemPrompt;
+                }
+                if ("userPrompt" in data && data.userPrompt != undefined) {
+                    this.userPrompt = data.userPrompt;
+                }
+                if ("tone" in data && data.tone != undefined) {
+                    this.tone = data.tone;
+                }
+                if ("maxLength" in data && data.maxLength != undefined) {
+                    this.maxLength = data.maxLength;
                 }
             }
         }
@@ -266,9 +282,37 @@ export namespace ai {
         set body(value: string) {
             pb_1.Message.setField(this, 2, value);
         }
+        get systemPrompt() {
+            return pb_1.Message.getFieldWithDefault(this, 3, "") as string;
+        }
+        set systemPrompt(value: string) {
+            pb_1.Message.setField(this, 3, value);
+        }
+        get userPrompt() {
+            return pb_1.Message.getFieldWithDefault(this, 4, "") as string;
+        }
+        set userPrompt(value: string) {
+            pb_1.Message.setField(this, 4, value);
+        }
+        get tone() {
+            return pb_1.Message.getFieldWithDefault(this, 5, "") as string;
+        }
+        set tone(value: string) {
+            pb_1.Message.setField(this, 5, value);
+        }
+        get maxLength() {
+            return pb_1.Message.getFieldWithDefault(this, 6, 0) as number;
+        }
+        set maxLength(value: number) {
+            pb_1.Message.setField(this, 6, value);
+        }
         static fromObject(data: {
             subject?: string;
             body?: string;
+            systemPrompt?: string;
+            userPrompt?: string;
+            tone?: string;
+            maxLength?: number;
         }): TemplateContent {
             const message = new TemplateContent({});
             if (data.subject != null) {
@@ -277,18 +321,46 @@ export namespace ai {
             if (data.body != null) {
                 message.body = data.body;
             }
+            if (data.systemPrompt != null) {
+                message.systemPrompt = data.systemPrompt;
+            }
+            if (data.userPrompt != null) {
+                message.userPrompt = data.userPrompt;
+            }
+            if (data.tone != null) {
+                message.tone = data.tone;
+            }
+            if (data.maxLength != null) {
+                message.maxLength = data.maxLength;
+            }
             return message;
         }
         toObject() {
             const data: {
                 subject?: string;
                 body?: string;
+                systemPrompt?: string;
+                userPrompt?: string;
+                tone?: string;
+                maxLength?: number;
             } = {};
             if (this.subject != null) {
                 data.subject = this.subject;
             }
             if (this.body != null) {
                 data.body = this.body;
+            }
+            if (this.systemPrompt != null) {
+                data.systemPrompt = this.systemPrompt;
+            }
+            if (this.userPrompt != null) {
+                data.userPrompt = this.userPrompt;
+            }
+            if (this.tone != null) {
+                data.tone = this.tone;
+            }
+            if (this.maxLength != null) {
+                data.maxLength = this.maxLength;
             }
             return data;
         }
@@ -300,6 +372,14 @@ export namespace ai {
                 writer.writeString(1, this.subject);
             if (this.body.length)
                 writer.writeString(2, this.body);
+            if (this.systemPrompt.length)
+                writer.writeString(3, this.systemPrompt);
+            if (this.userPrompt.length)
+                writer.writeString(4, this.userPrompt);
+            if (this.tone.length)
+                writer.writeString(5, this.tone);
+            if (this.maxLength != 0)
+                writer.writeInt32(6, this.maxLength);
             if (!w)
                 return writer.getResultBuffer();
         }
@@ -314,6 +394,18 @@ export namespace ai {
                         break;
                     case 2:
                         message.body = reader.readString();
+                        break;
+                    case 3:
+                        message.systemPrompt = reader.readString();
+                        break;
+                    case 4:
+                        message.userPrompt = reader.readString();
+                        break;
+                    case 5:
+                        message.tone = reader.readString();
+                        break;
+                    case 6:
+                        message.maxLength = reader.readInt32();
                         break;
                     default: reader.skipField();
                 }
@@ -330,16 +422,12 @@ export namespace ai {
     export class GenerateContentRequest extends pb_1.Message {
         #one_of_decls: number[][] = [];
         constructor(data?: any[] | {
-            prompt?: string;
             template?: Template;
             variables?: Map<string, string>;
         }) {
             super();
             pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
             if (!Array.isArray(data) && typeof data == "object") {
-                if ("prompt" in data && data.prompt != undefined) {
-                    this.prompt = data.prompt;
-                }
                 if ("template" in data && data.template != undefined) {
                     this.template = data.template;
                 }
@@ -350,38 +438,28 @@ export namespace ai {
             if (!this.variables)
                 this.variables = new Map();
         }
-        get prompt() {
-            return pb_1.Message.getFieldWithDefault(this, 1, "") as string;
-        }
-        set prompt(value: string) {
-            pb_1.Message.setField(this, 1, value);
-        }
         get template() {
-            return pb_1.Message.getWrapperField(this, Template, 2) as Template;
+            return pb_1.Message.getWrapperField(this, Template, 1) as Template;
         }
         set template(value: Template) {
-            pb_1.Message.setWrapperField(this, 2, value);
+            pb_1.Message.setWrapperField(this, 1, value);
         }
         get has_template() {
-            return pb_1.Message.getField(this, 2) != null;
+            return pb_1.Message.getField(this, 1) != null;
         }
         get variables() {
-            return pb_1.Message.getField(this, 3) as any as Map<string, string>;
+            return pb_1.Message.getField(this, 2) as any as Map<string, string>;
         }
         set variables(value: Map<string, string>) {
-            pb_1.Message.setField(this, 3, value as any);
+            pb_1.Message.setField(this, 2, value as any);
         }
         static fromObject(data: {
-            prompt?: string;
             template?: ReturnType<typeof Template.prototype.toObject>;
             variables?: {
                 [key: string]: string;
             };
         }): GenerateContentRequest {
             const message = new GenerateContentRequest({});
-            if (data.prompt != null) {
-                message.prompt = data.prompt;
-            }
             if (data.template != null) {
                 message.template = Template.fromObject(data.template);
             }
@@ -392,15 +470,11 @@ export namespace ai {
         }
         toObject() {
             const data: {
-                prompt?: string;
                 template?: ReturnType<typeof Template.prototype.toObject>;
                 variables?: {
                     [key: string]: string;
                 };
             } = {};
-            if (this.prompt != null) {
-                data.prompt = this.prompt;
-            }
             if (this.template != null) {
                 data.template = this.template.toObject();
             }
@@ -413,12 +487,10 @@ export namespace ai {
         serialize(w: pb_1.BinaryWriter): void;
         serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
             const writer = w || new pb_1.BinaryWriter();
-            if (this.prompt.length)
-                writer.writeString(1, this.prompt);
             if (this.has_template)
-                writer.writeMessage(2, this.template, () => this.template.serialize(writer));
+                writer.writeMessage(1, this.template, () => this.template.serialize(writer));
             for (const [key, value] of this.variables) {
-                writer.writeMessage(3, this.variables, () => {
+                writer.writeMessage(2, this.variables, () => {
                     writer.writeString(1, key);
                     writer.writeString(2, value);
                 });
@@ -433,12 +505,9 @@ export namespace ai {
                     break;
                 switch (reader.getFieldNumber()) {
                     case 1:
-                        message.prompt = reader.readString();
-                        break;
-                    case 2:
                         reader.readMessage(message.template, () => message.template = Template.deserialize(reader));
                         break;
-                    case 3:
+                    case 2:
                         reader.readMessage(message, () => pb_1.Map.deserializeBinary(message.variables as any, reader, reader.readString, reader.readString));
                         break;
                     default: reader.skipField();

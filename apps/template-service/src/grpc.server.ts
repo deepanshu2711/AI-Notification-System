@@ -23,12 +23,13 @@ class TemplateProtoServiceImp
           id: data._id,
           name: data.name,
           channel: data.channel,
-          content: {
-            subject: data.content.subject,
-            body: data.content.body,
-          },
+          content: data.content, // Pass the entire content object
           variables: data.variables,
           aiGenerated: data.aiGenerated,
+          globalUserId: data.globalUserId,
+          projectId: data.projectId,
+          createdAt: data.createdAt?.toISOString(),
+          updatedAt: data.updatedAt?.toISOString(),
         });
         callback(null, response);
       })

@@ -11,26 +11,10 @@ export class AiClient {
   }
 
   async generateContent(
-    prompt: string,
     variables: Record<string, string>,
-    template: {
-      id: string;
-      name: string;
-      channel: string;
-      content: {
-        subject: string;
-        body: string;
-      };
-      variables: string;
-      aiGenerated: boolean;
-      globalUserId: string;
-      projectId: string;
-    },
+    template: any,
   ): Promise<{ subject: string; body: string }> {
-    const contentMessage = new ai.TemplateContent({
-      subject: template.content.subject,
-      body: template.content.body,
-    });
+    const contentMessage = new ai.TemplateContent(template.content);
 
     const templateMessage = new ai.Template({
       id: template.id,
@@ -45,7 +29,6 @@ export class AiClient {
 
     const variablesMap = new Map<string, string>(Object.entries(variables));
     const request = new ai.GenerateContentRequest({
-      prompt,
       template: templateMessage,
       variables: variablesMap,
     });
