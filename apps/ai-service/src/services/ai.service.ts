@@ -40,7 +40,7 @@ Rules:
 - Return only the final message content.`;
 
   const fullPrompt = `
-System: ${content?.systemPrompt || staticPrompt}
+System: ${content.systemPrompt || staticPrompt}
 
 User: ${content.userPrompt}
 

@@ -57,3 +57,18 @@ export const sendNotification = async (
 
   return createdMessage;
 };
+
+export const checkMessageExists = async (id: string) => {
+  const message = await Message.findById(id);
+  if (!message) throw new AppError("Message not found", 404);
+};
+
+export const getMessage = async (id: string) => {
+  const message = await Message.findById(id);
+  if (!message) throw new AppError("Message not found", 404);
+  return message as any;
+};
+
+export const getMessageEvents = async (messageId: string) => {
+  return await MessageEvent.find({ messageId }).sort({ createdAt: 1 });
+};
