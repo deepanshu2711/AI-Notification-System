@@ -5,11 +5,34 @@ service AiProtoService {
   rpc GenerateContent(GenerateContentRequest) returns (GenerateContentResponse); 
 } 
 
+message Template {
+  string id = 1;
+  string name = 2;
+  string channel = 3;
+  TemplateContent content = 4;
+  string variables = 5; 
+  bool aiGenerated = 6;
+  string globalUserId = 7;
+  string projectId = 8;
+}
+
+message TemplateContent {
+  string subject = 1;
+  string body = 2;
+}
+
 message GenerateContentRequest {
-  string prompt =1;
+  string prompt = 1; 
+  Template template = 2; 
+  map<string, string> variables = 3; 
+}
+
+message EmailContent {
+  string subject = 1;
+  string body = 2;
 }
 
 message GenerateContentResponse {
-  string content =1; 
+  EmailContent content = 1;
 }
 

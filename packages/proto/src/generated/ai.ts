@@ -6,10 +6,333 @@
 import * as pb_1 from "google-protobuf";
 import * as grpc_1 from "@grpc/grpc-js";
 export namespace ai {
+    export class Template extends pb_1.Message {
+        #one_of_decls: number[][] = [];
+        constructor(data?: any[] | {
+            id?: string;
+            name?: string;
+            channel?: string;
+            content?: TemplateContent;
+            variables?: string;
+            aiGenerated?: boolean;
+            globalUserId?: string;
+            projectId?: string;
+        }) {
+            super();
+            pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
+            if (!Array.isArray(data) && typeof data == "object") {
+                if ("id" in data && data.id != undefined) {
+                    this.id = data.id;
+                }
+                if ("name" in data && data.name != undefined) {
+                    this.name = data.name;
+                }
+                if ("channel" in data && data.channel != undefined) {
+                    this.channel = data.channel;
+                }
+                if ("content" in data && data.content != undefined) {
+                    this.content = data.content;
+                }
+                if ("variables" in data && data.variables != undefined) {
+                    this.variables = data.variables;
+                }
+                if ("aiGenerated" in data && data.aiGenerated != undefined) {
+                    this.aiGenerated = data.aiGenerated;
+                }
+                if ("globalUserId" in data && data.globalUserId != undefined) {
+                    this.globalUserId = data.globalUserId;
+                }
+                if ("projectId" in data && data.projectId != undefined) {
+                    this.projectId = data.projectId;
+                }
+            }
+        }
+        get id() {
+            return pb_1.Message.getFieldWithDefault(this, 1, "") as string;
+        }
+        set id(value: string) {
+            pb_1.Message.setField(this, 1, value);
+        }
+        get name() {
+            return pb_1.Message.getFieldWithDefault(this, 2, "") as string;
+        }
+        set name(value: string) {
+            pb_1.Message.setField(this, 2, value);
+        }
+        get channel() {
+            return pb_1.Message.getFieldWithDefault(this, 3, "") as string;
+        }
+        set channel(value: string) {
+            pb_1.Message.setField(this, 3, value);
+        }
+        get content() {
+            return pb_1.Message.getWrapperField(this, TemplateContent, 4) as TemplateContent;
+        }
+        set content(value: TemplateContent) {
+            pb_1.Message.setWrapperField(this, 4, value);
+        }
+        get has_content() {
+            return pb_1.Message.getField(this, 4) != null;
+        }
+        get variables() {
+            return pb_1.Message.getFieldWithDefault(this, 5, "") as string;
+        }
+        set variables(value: string) {
+            pb_1.Message.setField(this, 5, value);
+        }
+        get aiGenerated() {
+            return pb_1.Message.getFieldWithDefault(this, 6, false) as boolean;
+        }
+        set aiGenerated(value: boolean) {
+            pb_1.Message.setField(this, 6, value);
+        }
+        get globalUserId() {
+            return pb_1.Message.getFieldWithDefault(this, 7, "") as string;
+        }
+        set globalUserId(value: string) {
+            pb_1.Message.setField(this, 7, value);
+        }
+        get projectId() {
+            return pb_1.Message.getFieldWithDefault(this, 8, "") as string;
+        }
+        set projectId(value: string) {
+            pb_1.Message.setField(this, 8, value);
+        }
+        static fromObject(data: {
+            id?: string;
+            name?: string;
+            channel?: string;
+            content?: ReturnType<typeof TemplateContent.prototype.toObject>;
+            variables?: string;
+            aiGenerated?: boolean;
+            globalUserId?: string;
+            projectId?: string;
+        }): Template {
+            const message = new Template({});
+            if (data.id != null) {
+                message.id = data.id;
+            }
+            if (data.name != null) {
+                message.name = data.name;
+            }
+            if (data.channel != null) {
+                message.channel = data.channel;
+            }
+            if (data.content != null) {
+                message.content = TemplateContent.fromObject(data.content);
+            }
+            if (data.variables != null) {
+                message.variables = data.variables;
+            }
+            if (data.aiGenerated != null) {
+                message.aiGenerated = data.aiGenerated;
+            }
+            if (data.globalUserId != null) {
+                message.globalUserId = data.globalUserId;
+            }
+            if (data.projectId != null) {
+                message.projectId = data.projectId;
+            }
+            return message;
+        }
+        toObject() {
+            const data: {
+                id?: string;
+                name?: string;
+                channel?: string;
+                content?: ReturnType<typeof TemplateContent.prototype.toObject>;
+                variables?: string;
+                aiGenerated?: boolean;
+                globalUserId?: string;
+                projectId?: string;
+            } = {};
+            if (this.id != null) {
+                data.id = this.id;
+            }
+            if (this.name != null) {
+                data.name = this.name;
+            }
+            if (this.channel != null) {
+                data.channel = this.channel;
+            }
+            if (this.content != null) {
+                data.content = this.content.toObject();
+            }
+            if (this.variables != null) {
+                data.variables = this.variables;
+            }
+            if (this.aiGenerated != null) {
+                data.aiGenerated = this.aiGenerated;
+            }
+            if (this.globalUserId != null) {
+                data.globalUserId = this.globalUserId;
+            }
+            if (this.projectId != null) {
+                data.projectId = this.projectId;
+            }
+            return data;
+        }
+        serialize(): Uint8Array;
+        serialize(w: pb_1.BinaryWriter): void;
+        serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
+            const writer = w || new pb_1.BinaryWriter();
+            if (this.id.length)
+                writer.writeString(1, this.id);
+            if (this.name.length)
+                writer.writeString(2, this.name);
+            if (this.channel.length)
+                writer.writeString(3, this.channel);
+            if (this.has_content)
+                writer.writeMessage(4, this.content, () => this.content.serialize(writer));
+            if (this.variables.length)
+                writer.writeString(5, this.variables);
+            if (this.aiGenerated != false)
+                writer.writeBool(6, this.aiGenerated);
+            if (this.globalUserId.length)
+                writer.writeString(7, this.globalUserId);
+            if (this.projectId.length)
+                writer.writeString(8, this.projectId);
+            if (!w)
+                return writer.getResultBuffer();
+        }
+        static deserialize(bytes: Uint8Array | pb_1.BinaryReader): Template {
+            const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new Template();
+            while (reader.nextField()) {
+                if (reader.isEndGroup())
+                    break;
+                switch (reader.getFieldNumber()) {
+                    case 1:
+                        message.id = reader.readString();
+                        break;
+                    case 2:
+                        message.name = reader.readString();
+                        break;
+                    case 3:
+                        message.channel = reader.readString();
+                        break;
+                    case 4:
+                        reader.readMessage(message.content, () => message.content = TemplateContent.deserialize(reader));
+                        break;
+                    case 5:
+                        message.variables = reader.readString();
+                        break;
+                    case 6:
+                        message.aiGenerated = reader.readBool();
+                        break;
+                    case 7:
+                        message.globalUserId = reader.readString();
+                        break;
+                    case 8:
+                        message.projectId = reader.readString();
+                        break;
+                    default: reader.skipField();
+                }
+            }
+            return message;
+        }
+        serializeBinary(): Uint8Array {
+            return this.serialize();
+        }
+        static deserializeBinary(bytes: Uint8Array): Template {
+            return Template.deserialize(bytes);
+        }
+    }
+    export class TemplateContent extends pb_1.Message {
+        #one_of_decls: number[][] = [];
+        constructor(data?: any[] | {
+            subject?: string;
+            body?: string;
+        }) {
+            super();
+            pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
+            if (!Array.isArray(data) && typeof data == "object") {
+                if ("subject" in data && data.subject != undefined) {
+                    this.subject = data.subject;
+                }
+                if ("body" in data && data.body != undefined) {
+                    this.body = data.body;
+                }
+            }
+        }
+        get subject() {
+            return pb_1.Message.getFieldWithDefault(this, 1, "") as string;
+        }
+        set subject(value: string) {
+            pb_1.Message.setField(this, 1, value);
+        }
+        get body() {
+            return pb_1.Message.getFieldWithDefault(this, 2, "") as string;
+        }
+        set body(value: string) {
+            pb_1.Message.setField(this, 2, value);
+        }
+        static fromObject(data: {
+            subject?: string;
+            body?: string;
+        }): TemplateContent {
+            const message = new TemplateContent({});
+            if (data.subject != null) {
+                message.subject = data.subject;
+            }
+            if (data.body != null) {
+                message.body = data.body;
+            }
+            return message;
+        }
+        toObject() {
+            const data: {
+                subject?: string;
+                body?: string;
+            } = {};
+            if (this.subject != null) {
+                data.subject = this.subject;
+            }
+            if (this.body != null) {
+                data.body = this.body;
+            }
+            return data;
+        }
+        serialize(): Uint8Array;
+        serialize(w: pb_1.BinaryWriter): void;
+        serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
+            const writer = w || new pb_1.BinaryWriter();
+            if (this.subject.length)
+                writer.writeString(1, this.subject);
+            if (this.body.length)
+                writer.writeString(2, this.body);
+            if (!w)
+                return writer.getResultBuffer();
+        }
+        static deserialize(bytes: Uint8Array | pb_1.BinaryReader): TemplateContent {
+            const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new TemplateContent();
+            while (reader.nextField()) {
+                if (reader.isEndGroup())
+                    break;
+                switch (reader.getFieldNumber()) {
+                    case 1:
+                        message.subject = reader.readString();
+                        break;
+                    case 2:
+                        message.body = reader.readString();
+                        break;
+                    default: reader.skipField();
+                }
+            }
+            return message;
+        }
+        serializeBinary(): Uint8Array {
+            return this.serialize();
+        }
+        static deserializeBinary(bytes: Uint8Array): TemplateContent {
+            return TemplateContent.deserialize(bytes);
+        }
+    }
     export class GenerateContentRequest extends pb_1.Message {
         #one_of_decls: number[][] = [];
         constructor(data?: any[] | {
             prompt?: string;
+            template?: Template;
+            variables?: Map<string, string>;
         }) {
             super();
             pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
@@ -17,7 +340,15 @@ export namespace ai {
                 if ("prompt" in data && data.prompt != undefined) {
                     this.prompt = data.prompt;
                 }
+                if ("template" in data && data.template != undefined) {
+                    this.template = data.template;
+                }
+                if ("variables" in data && data.variables != undefined) {
+                    this.variables = data.variables;
+                }
             }
+            if (!this.variables)
+                this.variables = new Map();
         }
         get prompt() {
             return pb_1.Message.getFieldWithDefault(this, 1, "") as string;
@@ -25,21 +356,56 @@ export namespace ai {
         set prompt(value: string) {
             pb_1.Message.setField(this, 1, value);
         }
+        get template() {
+            return pb_1.Message.getWrapperField(this, Template, 2) as Template;
+        }
+        set template(value: Template) {
+            pb_1.Message.setWrapperField(this, 2, value);
+        }
+        get has_template() {
+            return pb_1.Message.getField(this, 2) != null;
+        }
+        get variables() {
+            return pb_1.Message.getField(this, 3) as any as Map<string, string>;
+        }
+        set variables(value: Map<string, string>) {
+            pb_1.Message.setField(this, 3, value as any);
+        }
         static fromObject(data: {
             prompt?: string;
+            template?: ReturnType<typeof Template.prototype.toObject>;
+            variables?: {
+                [key: string]: string;
+            };
         }): GenerateContentRequest {
             const message = new GenerateContentRequest({});
             if (data.prompt != null) {
                 message.prompt = data.prompt;
+            }
+            if (data.template != null) {
+                message.template = Template.fromObject(data.template);
+            }
+            if (typeof data.variables == "object") {
+                message.variables = new Map(Object.entries(data.variables));
             }
             return message;
         }
         toObject() {
             const data: {
                 prompt?: string;
+                template?: ReturnType<typeof Template.prototype.toObject>;
+                variables?: {
+                    [key: string]: string;
+                };
             } = {};
             if (this.prompt != null) {
                 data.prompt = this.prompt;
+            }
+            if (this.template != null) {
+                data.template = this.template.toObject();
+            }
+            if (this.variables != null) {
+                data.variables = (Object.fromEntries)(this.variables);
             }
             return data;
         }
@@ -49,6 +415,14 @@ export namespace ai {
             const writer = w || new pb_1.BinaryWriter();
             if (this.prompt.length)
                 writer.writeString(1, this.prompt);
+            if (this.has_template)
+                writer.writeMessage(2, this.template, () => this.template.serialize(writer));
+            for (const [key, value] of this.variables) {
+                writer.writeMessage(3, this.variables, () => {
+                    writer.writeString(1, key);
+                    writer.writeString(2, value);
+                });
+            }
             if (!w)
                 return writer.getResultBuffer();
         }
@@ -60,6 +434,12 @@ export namespace ai {
                 switch (reader.getFieldNumber()) {
                     case 1:
                         message.prompt = reader.readString();
+                        break;
+                    case 2:
+                        reader.readMessage(message.template, () => message.template = Template.deserialize(reader));
+                        break;
+                    case 3:
+                        reader.readMessage(message, () => pb_1.Map.deserializeBinary(message.variables as any, reader, reader.readString, reader.readString));
                         break;
                     default: reader.skipField();
                 }
@@ -73,10 +453,100 @@ export namespace ai {
             return GenerateContentRequest.deserialize(bytes);
         }
     }
+    export class EmailContent extends pb_1.Message {
+        #one_of_decls: number[][] = [];
+        constructor(data?: any[] | {
+            subject?: string;
+            body?: string;
+        }) {
+            super();
+            pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
+            if (!Array.isArray(data) && typeof data == "object") {
+                if ("subject" in data && data.subject != undefined) {
+                    this.subject = data.subject;
+                }
+                if ("body" in data && data.body != undefined) {
+                    this.body = data.body;
+                }
+            }
+        }
+        get subject() {
+            return pb_1.Message.getFieldWithDefault(this, 1, "") as string;
+        }
+        set subject(value: string) {
+            pb_1.Message.setField(this, 1, value);
+        }
+        get body() {
+            return pb_1.Message.getFieldWithDefault(this, 2, "") as string;
+        }
+        set body(value: string) {
+            pb_1.Message.setField(this, 2, value);
+        }
+        static fromObject(data: {
+            subject?: string;
+            body?: string;
+        }): EmailContent {
+            const message = new EmailContent({});
+            if (data.subject != null) {
+                message.subject = data.subject;
+            }
+            if (data.body != null) {
+                message.body = data.body;
+            }
+            return message;
+        }
+        toObject() {
+            const data: {
+                subject?: string;
+                body?: string;
+            } = {};
+            if (this.subject != null) {
+                data.subject = this.subject;
+            }
+            if (this.body != null) {
+                data.body = this.body;
+            }
+            return data;
+        }
+        serialize(): Uint8Array;
+        serialize(w: pb_1.BinaryWriter): void;
+        serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
+            const writer = w || new pb_1.BinaryWriter();
+            if (this.subject.length)
+                writer.writeString(1, this.subject);
+            if (this.body.length)
+                writer.writeString(2, this.body);
+            if (!w)
+                return writer.getResultBuffer();
+        }
+        static deserialize(bytes: Uint8Array | pb_1.BinaryReader): EmailContent {
+            const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new EmailContent();
+            while (reader.nextField()) {
+                if (reader.isEndGroup())
+                    break;
+                switch (reader.getFieldNumber()) {
+                    case 1:
+                        message.subject = reader.readString();
+                        break;
+                    case 2:
+                        message.body = reader.readString();
+                        break;
+                    default: reader.skipField();
+                }
+            }
+            return message;
+        }
+        serializeBinary(): Uint8Array {
+            return this.serialize();
+        }
+        static deserializeBinary(bytes: Uint8Array): EmailContent {
+            return EmailContent.deserialize(bytes);
+        }
+    }
     export class GenerateContentResponse extends pb_1.Message {
         #one_of_decls: number[][] = [];
         constructor(data?: any[] | {
-            content?: string;
+            content?: EmailContent;
         }) {
             super();
             pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
@@ -87,26 +557,29 @@ export namespace ai {
             }
         }
         get content() {
-            return pb_1.Message.getFieldWithDefault(this, 1, "") as string;
+            return pb_1.Message.getWrapperField(this, EmailContent, 1) as EmailContent;
         }
-        set content(value: string) {
-            pb_1.Message.setField(this, 1, value);
+        set content(value: EmailContent) {
+            pb_1.Message.setWrapperField(this, 1, value);
+        }
+        get has_content() {
+            return pb_1.Message.getField(this, 1) != null;
         }
         static fromObject(data: {
-            content?: string;
+            content?: ReturnType<typeof EmailContent.prototype.toObject>;
         }): GenerateContentResponse {
             const message = new GenerateContentResponse({});
             if (data.content != null) {
-                message.content = data.content;
+                message.content = EmailContent.fromObject(data.content);
             }
             return message;
         }
         toObject() {
             const data: {
-                content?: string;
+                content?: ReturnType<typeof EmailContent.prototype.toObject>;
             } = {};
             if (this.content != null) {
-                data.content = this.content;
+                data.content = this.content.toObject();
             }
             return data;
         }
@@ -114,8 +587,8 @@ export namespace ai {
         serialize(w: pb_1.BinaryWriter): void;
         serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
             const writer = w || new pb_1.BinaryWriter();
-            if (this.content.length)
-                writer.writeString(1, this.content);
+            if (this.has_content)
+                writer.writeMessage(1, this.content, () => this.content.serialize(writer));
             if (!w)
                 return writer.getResultBuffer();
         }
@@ -126,7 +599,7 @@ export namespace ai {
                     break;
                 switch (reader.getFieldNumber()) {
                     case 1:
-                        message.content = reader.readString();
+                        reader.readMessage(message.content, () => message.content = EmailContent.deserialize(reader));
                         break;
                     default: reader.skipField();
                 }

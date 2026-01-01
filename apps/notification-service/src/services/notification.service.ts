@@ -23,6 +23,7 @@ export const sendNotification = async (
   to: ChannelInput[],
   priority: string,
   templateId: string,
+  variables: Record<string, any> = {},
 ) => {
   //NOTE: FIRST CHECK IF THIS PROJECT EXISTS FROM MANAGEMENT SERVICE
   const projectExists = await projectClient.checkProjectExists(projectId);
@@ -51,6 +52,7 @@ export const sendNotification = async (
     to,
     messageId: createdMessage._id,
     templateId,
+    variables,
   });
 
   return createdMessage;
