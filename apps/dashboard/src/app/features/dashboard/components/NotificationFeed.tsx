@@ -116,15 +116,12 @@ function timeAgo(dateString: string) {
 export function NotificationFeed() {
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <Heading level={3}>Recent Notifications</Heading>
-        <Badge>Status</Badge>
-      </div>
-      <div className="space-y-4">
+      <Heading level={3}>Recent Notifications</Heading>
+      <div className="space-y-6">
         {dummyData.map((notification) => (
           <div
             key={notification._id}
-            className="rounded-tr-2xl rounded-bl-2xl border-gray-500 bg-gray-50/1 p-4 transition-colors hover:cursor-pointer hover:bg-gray-50/2"
+            className="border-t border-gray-500 bg-gray-50/1 p-4 transition-colors hover:cursor-pointer hover:bg-gray-50/2"
           >
             <div className="flex items-start justify-between">
               <div className="flex-1">
