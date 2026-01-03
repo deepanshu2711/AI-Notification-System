@@ -127,6 +127,7 @@ export const getRecentNotifications = async (globalUserId: string) => {
         priority: 1,
         to: 1,
         projectId: 1,
+        createdAt: 1,
         latestStatus: "$latestMessageEvent.event_type",
       },
     },
