@@ -1,6 +1,6 @@
 import { Text } from '@/components/elements/text'
 import { Badge } from '@/components/typescript/badge'
-import { Subheading } from '@/components/typescript/heading'
+import { Heading } from '@/components/typescript/heading'
 
 interface Project {
   id: string
@@ -29,7 +29,7 @@ const dummyProjects: Project[] = [
     id: '3',
     name: 'User Onboarding',
     totalNotifications: 3200,
-    deliveryRate: 99.1,
+    deliveryRate: 70.8,
     activeTemplates: 2,
   },
   {
@@ -44,18 +44,17 @@ const dummyProjects: Project[] = [
 export function ProjectsOverview() {
   return (
     <div className="space-y-4">
-      <Subheading className="text-lg font-semibold">Projects Overview</Subheading>
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+      <Heading>Projects Overview</Heading>
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-1">
         {dummyProjects.map((project) => (
-          <div key={project.id} className="rounded-lg border border-gray-500 p-4 transition-colors hover:bg-gray-50/1">
+          <div key={project.id} className="border-t border-gray-500 p-4 transition-colors hover:bg-gray-50/1">
             <div className="mb-2 flex items-start justify-between">
-              <Text className="font-medium">{project.name}</Text>
-              <Badge color="sky">Active</Badge>
+              <Text className="">{project.name}</Text>
+              <Badge color="green">Active</Badge>
             </div>
             <div className="space-y-1 text-sm text-gray-600">
               <div>Total Notifications: {project.totalNotifications.toLocaleString()}</div>
-              <div>Delivery Rate: {project.deliveryRate}%</div>
-              <div>Active Templates: {project.activeTemplates}</div>
+              <Badge color={project.deliveryRate > 90 ? 'lime' : 'rose'}>Delivery Rate: {project.deliveryRate}%</Badge>
             </div>
           </div>
         ))}
