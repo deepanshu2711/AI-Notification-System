@@ -32,7 +32,7 @@ export default function Page() {
         }
         cta={
           <div className="flex items-center gap-4">
-            <ButtonLink href="#" size="lg">
+            <ButtonLink href="/dashboard" size="lg">
               Get API Key
             </ButtonLink>
 

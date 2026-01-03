@@ -72,3 +72,63 @@ export const getMessage = async (id: string) => {
 export const getMessageEvents = async (messageId: string) => {
   return await MessageEvent.find({ messageId }).sort({ createdAt: 1 });
 };
+
+export const getRecentNotifications = async (globalUserId: string) => {
+  console.log("global user id", globalUserId);
+  return await Message.aggregate([
+    {
+      $match: {
+        globalUserId: globalUserId,
+      },
+    },
+    {
+      $lookup: {
+        from: "message_events",
+        localField: "_id",
+        foreignField: "messageId",
+        as: "messageEvents",
+      },
+    },
+    {
+      $addFields: {
+        latestMessageEvent: {
+          $arrayElemAt: [
+            {
+              $slice: [
+                {
+                  $sortArray: {
+                    input: "$messageEvents",
+                    sortBy: {
+                      createdAt: -1,
+                    },
+                  },
+                },
+                0,
+                1,
+              ],
+            },
+            0,
+          ],
+        },
+      },
+    },
+    {
+      $sort: {
+        createdAt: -1,
+      },
+    },
+    {
+      $limit: 10,
+    },
+    {
+      $project: {
+        _id: 1,
+        globalUserId: 1,
+        priority: 1,
+        to: 1,
+        projectId: 1,
+        latestStatus: "$latestMessageEvent.event_type",
+      },
+    },
+  ]);
+};

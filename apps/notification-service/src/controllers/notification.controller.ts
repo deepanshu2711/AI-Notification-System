@@ -46,3 +46,13 @@ export const getMessageEvents = asyncHandler(
     successResponse(res, { id, events });
   },
 );
+
+export const getRecentNotifications = asyncHandler(
+  async (req: Request, res: Response) => {
+    const { globalUserId } = req.params;
+    const data = await NotificationService.getRecentNotifications(
+      globalUserId!,
+    );
+    successResponse(res, data);
+  },
+);

@@ -1,7 +1,9 @@
+import { Dashboard } from '@/app/features/dashboard'
+
 export default function Page() {
   return (
     <>
-      <p>Dashboard</p>
+      <Dashboard />
     </>
   )
 }
