@@ -21,8 +21,11 @@
     ]
   },
   "dependencies": {
+    "@headlessui/react": "^2.2.9",
     "@tailwindplus/elements": "^1.0.21",
     "clsx": "^2.1.1",
+    "lucide-react": "^0.562.0",
+    "motion": "^12.23.26",
     "next": "^16",
     "react": "^19",
     "react-dom": "^19",

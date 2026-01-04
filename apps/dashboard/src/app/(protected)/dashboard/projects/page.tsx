@@ -1,4 +1,4 @@
-import { Projects } from '@/app/features/projects'
+import { Projects } from '@/features/projects'
 
 export default function Page() {
   return (
