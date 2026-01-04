@@ -1,5 +1,5 @@
 {
-  "name": "oatmeal-demo",
+  "name": "dashboard",
   "version": "0.0.1",
   "scripts": {
     "dev": "next dev",

@@ -1,6 +1,12 @@
+'use client'
+import { useState } from 'react'
+
+import { Button } from '@/components/elements/button'
 import { Text } from '@/components/elements/text'
+import { PlusIcon } from '@/components/icons/plus-icon'
 import { Badge } from '@/components/typescript/badge'
 import { Heading } from '@/components/typescript/heading'
+import { CreateProjectModal } from './CreateProjectModal'
 
 interface Project {
   id: string
@@ -42,9 +48,23 @@ const dummyProjects: Project[] = [
 ]
 
 export function ProjectsOverview() {
+  const [showModal, setShowModal] = useState(false)
+
+  const handleCreateProject = (name: string, description: string) => {
+    console.log('Create project', { name, description })
+    // Here you would typically call an API to create the project
+  }
+
   return (
     <div className="space-y-4">
-      <Heading>Projects Overview</Heading>
+      <div className="flex items-center justify-between">
+        <Heading>Projects Overview</Heading>
+        <Button onClick={() => setShowModal(true)}>
+          <PlusIcon />
+          Create New Project
+        </Button>
+      </div>
+      <CreateProjectModal open={showModal} onClose={() => setShowModal(false)} onCreate={handleCreateProject} />
       <div className="grid grid-cols-1 gap-4 md:grid-cols-1">
         {dummyProjects.map((project) => (
           <div key={project.id} className="border-t border-gray-500 p-4 transition-colors hover:bg-gray-50/1">
