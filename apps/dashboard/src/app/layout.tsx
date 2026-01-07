@@ -9,6 +9,7 @@ import {
   NewsletterForm,
   SocialLink,
 } from '@/components/sections/footer-with-newsletter-form-categories-and-social-icons'
+import { Providers } from '@/providers'
 import type { Metadata } from 'next'
 import './globals.css'
 
@@ -34,7 +35,9 @@ export default function RootLayout({
       </head>
       <body>
         <>
-          <Main>{children}</Main>
+          <Providers>
+            <Main>{children}</Main>
+          </Providers>
 
           <FooterWithNewsletterFormCategoriesAndSocialIcons
             id="footer"

@@ -11,11 +11,14 @@ export const getToken = async ({
   code: string;
   clientId: string;
 }) => {
-  const response = await axios.post(`http://localhost:5005/api/auth/token`, {
-    code,
-    clientId,
-    clientSecret: process.env.CLIENT_SECRET,
-  });
+  const response = await axios.post(
+    `${process.env.GLOBAL_AUTH_BACKEND}/api/auth/token`,
+    {
+      code,
+      clientId,
+      clientSecret: process.env.CLIENT_SECRET,
+    },
+  );
 
   const { accessToken, refreshToken } = response.data.data;
   return { accessToken, refreshToken };
