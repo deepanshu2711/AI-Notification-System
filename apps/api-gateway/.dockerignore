@@ -1,0 +1,48 @@
+
+# Node dependencies
+node_modules
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Build outputs
+.next
+dist
+build
+out
+coverage
+.turbo
+
+# Environment files (never ship secrets)
+.env
+.env.*
+!.env.example
+
+# Logs
+logs
+*.log
+
+# OS / Editor junk
+.DS_Store
+Thumbs.db
+.vscode
+.idea
+
+# Git
+.git
+.gitignore
+
+# Tests & docs
+__tests__
+tests
+docs
+*.md
+
+# Docker files (optional)
+docker-compose.yml
+Dockerfile
+
+# Cache
+.cache
+.eslintcache

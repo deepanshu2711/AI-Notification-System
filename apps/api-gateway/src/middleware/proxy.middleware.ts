@@ -15,7 +15,7 @@ const isPublicRoute = (path: string): boolean => {
 
 export const AuthProxy = (req: Request, res: Response, next: NextFunction) => {
   const proxyOptions = {
-    target: "http://localhost:5002",
+    target: process.env.AUTH_SERVICE,
     changeOrigin: true,
     pathRewrite: { "^/api/v1/auth": "" },
     cookieDomainRewrite: "",
@@ -41,7 +41,7 @@ export const NotificationProxy = (
   next: NextFunction,
 ) => {
   const proxyOptions = {
-    target: "http://localhost:5006",
+    target: process.env.NOTIFICATION_SERVICE,
     changeOrigin: true,
     pathRewrite: { "^/api/v1/notification": "" },
     cookieDomainRewrite: "",
@@ -67,7 +67,7 @@ export const TemplateProxy = (
   next: NextFunction,
 ) => {
   const proxyOptions = {
-    target: "http://localhost:5007",
+    target: process.env.TEMPLATE_SERVICE,
     changeOrigin: true,
     pathRewrite: { "^/api/v1/template": "" },
     cookieDomainRewrite: "",
@@ -93,7 +93,7 @@ export const ManagementProxy = (
   next: NextFunction,
 ) => {
   const proxyOptions = {
-    target: "http://localhost:5004",
+    target: process.env.MANAGEMENT_SERVICE,
     changeOrigin: true,
     pathRewrite: { "^/api/v1/management": "" },
     cookieDomainRewrite: "",

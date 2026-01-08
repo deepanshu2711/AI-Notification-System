@@ -15,8 +15,11 @@
   "license": "ISC",
   "dependencies": {
     "@repo/config": "^1.0.0",
+    "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/jsonwebtoken": "^9.0.10",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
     "express": "^5.2.1",
     "http-proxy-middleware": "^3.0.5",
     "jsonwebtoken": "^9.0.3"

@@ -1,41 +1,28 @@
-# Build stage
-FROM node:18-alpine AS builder
+FROM node:20-alpine AS base
 
-WORKDIR /app
-
-# Copy package files
-COPY package*.json ./
-COPY turbo.json ./
-COPY apps/api-gateway/package*.json ./apps/api-gateway/
-COPY packages/*/package*.json ./packages/
-
-# Install dependencies
-RUN npm ci
-
-# Copy source
+FROM base AS prepare
+WORKDIR /app 
+RUN npm install -g turbo
 COPY . .
+RUN turbo prune api-gateway --docker 
 
-# Build using turbo
-RUN npx turbo run build --filter=api-gateway
+FROM base AS builder
+WORKDIR /app 
+COPY  --from=prepare /app/out/json/ ./
+RUN npm install
+COPY --from=prepare /app/out/full/ ./
+RUN npx turbo build
 
-# Production stage
-FROM node:18-alpine AS runtime
-
+FROM base as runner
 WORKDIR /app
+RUN addgroup --system --gid 1001 expressjs
+RUN adduser --system --uid 1001 expressjs
+USER expressjs
 
-# Copy package files for production
-COPY apps/api-gateway/package*.json ./
-COPY package-lock.json ./
-
-# Install only production dependencies
-RUN npm ci --only=production && npm cache clean --force
-
-# Copy built files
-COPY --from=builder /app/apps/api-gateway/dist ./dist
-COPY --from=builder /app/packages/config ./node_modules/@repo/config
-
-# Expose port
+# Default port (can be overridden at runtime)
+ENV PORT=5001
+# Informational (optional but recommended)
 EXPOSE 5001
 
-# Start the app
-CMD ["node", "dist/index.js"]
+COPY --from=builder /app .
+CMD node apps/api-gateway/dist/index.js
