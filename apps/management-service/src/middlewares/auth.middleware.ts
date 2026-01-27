@@ -12,7 +12,9 @@ export const setManagementMiddleware = async (
   res: Response,
   next: NextFunction,
 ) => {
-  const userId = req.headers["x-global-user-Id"] as string;
+  const userId = req.headers["x-global-user-id"] as string;
+  console.log("headers in managemet", req.headers);
+  console.log("úserId in managemet middleware", userId);
   if (userId) {
     req.user = { globalUserId: userId };
   }

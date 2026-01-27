@@ -22,6 +22,7 @@ export const createProject = asyncHandler(
   async (req: Request, res: Response) => {
     const { name, description, settings } = req.body;
     const globalUserId = req.user?.globalUserId;
+    console.log("reach here", globalUserId);
     const payload = {
       name,
       description,

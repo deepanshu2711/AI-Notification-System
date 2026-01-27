@@ -3,7 +3,7 @@ import { createProxyMiddleware } from "http-proxy-middleware";
 
 import { authMiddleware } from "./auth.middleware.js";
 
-const publicRoutes: string[] = ["/token", "/send", "/"];
+const publicRoutes: string[] = [];
 
 const isPublicRoute = (path: string): boolean => {
   return publicRoutes.some((route: string) => path.startsWith(route));
@@ -97,10 +97,12 @@ export const ManagementProxy = (
     changeOrigin: true,
     pathRewrite: { "^/api/v1/management": "" },
     cookieDomainRewrite: "",
-    onProxyReq: (proxyReq: any) => {
-      if (req.user) {
-        proxyReq.setHeader("x-global-user-Id", req.user.globalUserId);
-      }
+    on: {
+      proxyReq: (proxyReq: any) => {
+        if (req.user?.globalUserId) {
+          proxyReq.setHeader("x-global-user-id", req.user.globalUserId);
+        }
+      },
     },
   };
   if (!isPublicRoute(req.path)) {

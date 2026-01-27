@@ -6,6 +6,7 @@ import { Text } from '@/components/elements/text'
 import { PlusIcon } from '@/components/icons/plus-icon'
 import { Badge } from '@/components/typescript/badge'
 import { Heading } from '@/components/typescript/heading'
+import { useCreateProjectMutation } from '../hooks/mutation/useCreateProjectMutation'
 import { useGetProjectsQuery } from '../hooks/query/useGetProjectsQuery'
 import { CreateProjectModal } from './CreateProjectModal'
 
@@ -51,9 +52,11 @@ const dummyProjects: Project[] = [
 export function ProjectsOverview() {
   const [showModal, setShowModal] = useState(false)
   const { data } = useGetProjectsQuery()
+  const { mutate: createProject } = useCreateProjectMutation()
+  console.log('data', data)
 
   const handleCreateProject = (name: string, description: string) => {
-    console.log('Create project', { name, description })
+    createProject({ name, description })
   }
 
   return (

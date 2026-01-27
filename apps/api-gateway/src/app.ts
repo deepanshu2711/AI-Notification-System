@@ -5,6 +5,7 @@ dotenv.config();
 
 import {
   AuthProxy,
+  ManagementProxy,
   NotificationProxy,
   TemplateProxy,
 } from "./middleware/proxy.middleware.js";
@@ -20,3 +21,4 @@ app.use(
 app.use("/api/v1/auth", AuthProxy);
 app.use("/api/v1/notification", NotificationProxy);
 app.use("/api/v1/template", TemplateProxy);
+app.use("/api/v1/management", ManagementProxy);
