@@ -6,6 +6,7 @@ import { Text } from '@/components/elements/text'
 import { PlusIcon } from '@/components/icons/plus-icon'
 import { Badge } from '@/components/typescript/badge'
 import { Heading } from '@/components/typescript/heading'
+import { useGetProjectsQuery } from '../hooks/query/useGetProjectsQuery'
 import { CreateProjectModal } from './CreateProjectModal'
 
 interface Project {
@@ -49,10 +50,10 @@ const dummyProjects: Project[] = [
 
 export function ProjectsOverview() {
   const [showModal, setShowModal] = useState(false)
+  const { data } = useGetProjectsQuery()
 
   const handleCreateProject = (name: string, description: string) => {
     console.log('Create project', { name, description })
-    // Here you would typically call an API to create the project
   }
 
   return (

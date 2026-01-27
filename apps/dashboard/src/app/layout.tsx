@@ -38,7 +38,6 @@ export default async function RootLayout({
       <body>
         <>
           <Providers>
-            {/* @ts-expect-error type error */}
             <AuthProvider initialSession={session} clientId={process.env.NEXT_PUBLIC_CLIENT_ID!}>
               <Main>{children}</Main>
             </AuthProvider>
