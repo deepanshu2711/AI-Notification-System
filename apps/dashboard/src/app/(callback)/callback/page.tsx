@@ -1,10 +1,5 @@
-import { Callback } from '@/features/auth'
-import { Suspense } from 'react'
+import { AuthenticateWithRedirectCallback } from '@myauth/next'
 
-export default function Page() {
-  return (
-    <Suspense>
-      <Callback />
-    </Suspense>
-  )
+export default function CallbackPage() {
+  return <AuthenticateWithRedirectCallback />
 }

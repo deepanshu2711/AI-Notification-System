@@ -22,6 +22,7 @@
   },
   "dependencies": {
     "@headlessui/react": "^2.2.9",
+    "@myauth/next": "^1.2.5",
     "@tailwindplus/elements": "^1.0.21",
     "@tanstack/react-query": "^5.90.16",
     "axios": "^1.13.2",
