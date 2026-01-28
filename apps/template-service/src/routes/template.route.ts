@@ -4,7 +4,7 @@ import { setTemplateMiddleware } from "../middlewares/auth.middleware.js";
 
 export const templateRouter = express.Router();
 
-//templateRouter.use(setTemplateMiddleware);
+templateRouter.use(setTemplateMiddleware);
 
 templateRouter.post("/", TemplateContoller.createTemplate);
 templateRouter.get("/", TemplateContoller.getTemplates);
