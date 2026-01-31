@@ -3,7 +3,6 @@
 import { Activity, BarChart3, FolderOpen, Plus, Send } from 'lucide-react' // Assuming you have lucide-react or similar icons
 import { useState } from 'react'
 
-import { Button } from '@/components/elements/button'
 import { useCreateProjectMutation } from '../hooks/mutation/useCreateProjectMutation'
 import { useGetProjectsQuery } from '../hooks/query/useGetProjectsQuery'
 import { CreateProjectModal } from './CreateProjectModal'
@@ -23,12 +22,6 @@ export function ProjectsOverview() {
   return (
     <div className="animate-in fade-in w-full space-y-8 duration-500">
       {/* --- Header Section --- */}
-      <div className="flex flex-col justify-end gap-4 pb-6 sm:flex-row sm:items-center">
-        <Button onClick={() => setShowModal(true)} size="md">
-          <Plus className="h-4 w-4" />
-          Create Project
-        </Button>
-      </div>
 
       <CreateProjectModal open={showModal} onClose={() => setShowModal(false)} onCreate={handleCreateProject} />
 
