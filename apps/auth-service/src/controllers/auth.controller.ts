@@ -32,3 +32,9 @@ export const generateApiKey = asyncHandler(
     return successResponse(res, data);
   },
 );
+
+export const getApiKey = asyncHandler(async (req: Request, res: Response) => {
+  const globalUserId = req.user!.globalUserId;
+  const data = await AuthService.getApiKey(globalUserId!);
+  return successResponse(res, data);
+});

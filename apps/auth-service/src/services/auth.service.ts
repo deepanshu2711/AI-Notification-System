@@ -37,3 +37,16 @@ export const generateApiKey = async (userId: string, name?: string) => {
   });
   return rawKey;
 };
+
+export const getApiKey = async (userId: string) => {
+  const apiKey = await ApiKey.findOne({ globalUserId: userId });
+  if (!apiKey) throw new AppError("Api Key not found", 404);
+
+  const partialKey = `${apiKey.hashedKey.substring(0, 4)}${"*".repeat(apiKey.hashedKey.length - 8)}${apiKey.hashedKey.substring(apiKey.hashedKey.length - 4)}`;
+
+  return {
+    partialKey,
+    name: apiKey.name,
+    createdAt: apiKey.createdAt,
+  };
+};

@@ -10,3 +10,4 @@ authRoutes.post(
   setAuthMiddleware,
   AuthController.generateApiKey,
 );
+authRoutes.get("/api-key", setAuthMiddleware, AuthController.getApiKey);

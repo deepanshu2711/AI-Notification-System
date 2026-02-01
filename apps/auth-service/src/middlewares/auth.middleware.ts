@@ -11,7 +11,7 @@ export const setAuthMiddleware = (
   res: Response,
   next: NextFunction,
 ) => {
-  const userId = req.headers["x-global-user-Id"] as string;
+  const userId = req.headers["x-global-user-id"] as string;
   if (userId) {
     req.user = { globalUserId: userId };
   }
