@@ -5,6 +5,9 @@ const ApiKeySchema = new Schema(
     globalUserId: { type: String, required: true },
     hashedKey: { type: String, required: true },
     name: { type: String },
+
+    usageCount: { type: Number, default: 0 },
+    lastUsedAt: { type: Date },
   },
   { timestamps: true },
 );

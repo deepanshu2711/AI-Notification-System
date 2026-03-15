@@ -52,5 +52,16 @@ export const getApiKey = async (userId: string) => {
 };
 
 export const isApiKeyValid = async (hashedKey: string): Promise<boolean> => {
-  return !!(await ApiKey.exists({ hashedKey }));
+  const apiKey = await ApiKey.findOne({ hashedKey });
+  if (!apiKey) return false;
+
+  await ApiKey.updateOne(
+    { _id: apiKey._id },
+    {
+      $inc: { usageCount: 1 },
+      $set: { lastUsedAt: new Date() },
+    },
+  );
+
+  return true;
 };
