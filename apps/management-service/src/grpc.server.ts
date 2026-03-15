@@ -1,39 +1,28 @@
 import * as grpc from "@grpc/grpc-js";
-import { project } from "@repo/proto/index";
+import { ProjectService } from "@repo/proto/index";
 import { getProjectDetails } from "./services/project.service.js";
 
-class ProjectProtoServiceImpl
-  extends project.UnimplementedProjectProtoServiceService
-{
-  CheckProjectExists(
-    call: grpc.ServerUnaryCall<
-      project.CheckProjectExistsRequest,
-      project.CheckProjectExistsResponse
-    >,
-    callback: grpc.sendUnaryData<project.CheckProjectExistsResponse>,
-  ): void {
+const handlers: ProjectService.ProjectProtoServiceServer = {
+  checkProjectExists: async (call, callback) => {
     const { projectId } = call.request;
     getProjectDetails(projectId)
       .then(() => {
-        const response = new project.CheckProjectExistsResponse({
+        const response = ProjectService.CheckProjectExistsResponse.create({
           exists: true,
         });
         callback(null, response);
       })
       .catch(() => {
-        const response = new project.CheckProjectExistsResponse({
+        const response = ProjectService.CheckProjectExistsResponse.create({
           exists: false,
         });
         callback(null, response);
       });
-  }
-}
+  },
+};
 
 const server = new grpc.Server();
-server.addService(
-  project.UnimplementedProjectProtoServiceService.definition,
-  new ProjectProtoServiceImpl(),
-);
+server.addService(ProjectService.ProjectProtoServiceService, handlers);
 
 export const startGrpcServer = () => {
   const port = 50051;

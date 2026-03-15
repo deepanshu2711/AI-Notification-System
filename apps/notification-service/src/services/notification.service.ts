@@ -4,9 +4,11 @@ import { Message } from "../models/message.model.js";
 import { NotificationProducer } from "../producers/notification.producer.js";
 import { MessageEvent } from "../models/messageEvent.model.js";
 import { TemplateClient } from "../clients/templateClient.js";
+import { ApiClient } from "../clients/apiClient.js";
 
 const projectClient = new ProjectClient();
 const templateClient = new TemplateClient();
+const apiClient = new ApiClient();
 const publishNotification = new NotificationProducer();
 
 type ChannelInput = {
@@ -24,7 +26,14 @@ export const sendNotification = async (
   priority: string,
   templateId: string,
   variables: Record<string, any> = {},
+  hashedApiKey: string,
 ) => {
+  //NOTE: CHECK API KEY HERE
+
+  const isValid = await apiClient.validateApiKey(hashedApiKey);
+  console.log("isValid", isValid);
+  return;
+
   //NOTE: FIRST CHECK IF THIS PROJECT EXISTS FROM MANAGEMENT SERVICE
   const projectExists = await projectClient.checkProjectExists(projectId);
   if (!projectExists) throw new AppError("Project does not exist", 400);

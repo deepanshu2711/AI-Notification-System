@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package api;
+
+service ApiProtoService {
+  rpc validateApiKey(ValidateApiKeyRequest) returns (ValidateApiKeyResponse);
+}
+
+message ValidateApiKeyRequest {
+  string hashedApiKey = 1;
+}
+
+message ValidateApiKeyResponse {
+  bool isValid =  1;
+}

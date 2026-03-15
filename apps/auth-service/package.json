@@ -14,7 +14,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@grpc/grpc-js": "^1.14.3",
     "@repo/config": "^1.0.0",
+    "@repo/proto": "^1.0.0",
     "@repo/rabbitmq": "^1.0.0",
     "@types/cookie-parser": "^1.4.10",
     "@types/express": "^5.0.6",

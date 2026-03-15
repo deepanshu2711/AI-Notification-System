@@ -1,24 +1,19 @@
 import * as grpc from "@grpc/grpc-js";
-import { ai } from "@repo/proto/index";
+import { AIService } from "@repo/proto/index";
 import { generateContent } from "./services/ai.service.js";
 
-class AiProtoServiceImp extends ai.UnimplementedAiProtoServiceService {
-  GenerateContent(
-    call: grpc.ServerUnaryCall<
-      ai.GenerateContentRequest,
-      ai.GenerateContentResponse
-    >,
-    callback: grpc.sendUnaryData<ai.GenerateContentResponse>,
-  ): void {
+const handlers: AIService.AiProtoServiceServer = {
+  generateContent: (call, callback) => {
     const { variables, template } = call.request;
-    const variablesRecord = Object.fromEntries(variables);
+    // const variablesRecord = Object.fromEntries(variables);
+    const variablesRecord = variables;
     generateContent(template, variablesRecord)
       .then((data) => {
-        const emailContent = new ai.EmailContent({
+        const emailContent = AIService.EmailContent.create({
           body: data.body,
           subject: data.subject,
         });
-        const response = new ai.GenerateContentResponse({
+        const response = AIService.GenerateContentResponse.create({
           content: emailContent,
         });
         callback(null, response);
@@ -29,14 +24,11 @@ class AiProtoServiceImp extends ai.UnimplementedAiProtoServiceService {
           message: "Ërror while generating Content",
         });
       });
-  }
-}
+  },
+};
 
 const server = new grpc.Server();
-server.addService(
-  ai.UnimplementedAiProtoServiceService.definition,
-  new AiProtoServiceImp(),
-);
+server.addService(AIService.AiProtoServiceService, handlers);
 
 export const startGrpcServer = () => {
   const port = 50053;

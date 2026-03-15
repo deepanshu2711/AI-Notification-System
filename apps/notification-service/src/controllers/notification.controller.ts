@@ -6,8 +6,15 @@ import { successResponse } from "@repo/config/responses";
 
 export const sendNotification = asyncHandler(
   async (req: Request, res: Response) => {
-    const { projectId, to, priority, globalUserId, templateId, variables } =
-      req.body;
+    const {
+      projectId,
+      to,
+      priority,
+      globalUserId,
+      templateId,
+      variables,
+      hashedApiKey,
+    } = req.body;
 
     const data = await NotificationService.sendNotification(
       projectId,
@@ -16,6 +23,7 @@ export const sendNotification = asyncHandler(
       priority,
       templateId,
       variables,
+      hashedApiKey,
     );
     successResponse(res, data);
   },

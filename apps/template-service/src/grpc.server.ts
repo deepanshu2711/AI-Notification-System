@@ -1,29 +1,34 @@
 import * as grpc from "@grpc/grpc-js";
-import { template } from "@repo/proto/index";
+import { TemplateService } from "@repo/proto/index";
 import { getTemplateById } from "./services/template.service.js";
 
-class TemplateProtoServiceImp
-  extends template.UnimplementedTemplateProtoServiceService
-{
-  GetTemplateDetails(
+const handlers: TemplateService.TemplateProtoServiceServer = {
+  getTemplateDetails: (
     call: grpc.ServerUnaryCall<
-      template.GetTemplateDetailsRequest,
-      template.GetTemplateDetailsResponse
+      TemplateService.GetTemplateDetailsRequest,
+      TemplateService.GetTemplateDetailsResponse
     >,
-    callback: grpc.sendUnaryData<template.GetTemplateDetailsResponse>,
-  ): void {
+    callback: grpc.sendUnaryData<TemplateService.GetTemplateDetailsResponse>,
+  ): void => {
     const { templateId } = call.request;
+
     getTemplateById(templateId)
       .then((data) => {
         if (!data) {
-          throw new Error("Template not found");
+          return callback(
+            {
+              code: grpc.status.NOT_FOUND,
+              message: "Template not found",
+            },
+            null,
+          );
         }
-        const response = template.GetTemplateDetailsResponse.fromObject({
-          //@ts-ignore
-          id: data._id,
+
+        const response = TemplateService.GetTemplateDetailsResponse.create({
+          id: data._id.toString(),
           name: data.name,
           channel: data.channel,
-          content: data.content, // Pass the entire content object
+          content: data.content,
           variables: data.variables,
           aiGenerated: data.aiGenerated,
           globalUserId: data.globalUserId,
@@ -31,25 +36,23 @@ class TemplateProtoServiceImp
           createdAt: data.createdAt?.toISOString(),
           updatedAt: data.updatedAt?.toISOString(),
         });
+
         callback(null, response);
       })
       .catch((err) => {
         callback(
           {
-            code: grpc.status.NOT_FOUND,
-            message: err?.message || "Template not found",
+            code: grpc.status.INTERNAL,
+            message: err?.message || "Internal server error",
           },
           null,
         );
       });
-  }
-}
+  },
+};
 
 const server = new grpc.Server();
-server.addService(
-  template.UnimplementedTemplateProtoServiceService.definition,
-  new TemplateProtoServiceImp(),
-);
+server.addService(TemplateService.TemplateProtoServiceService, handlers);
 
 export const startGrpcServer = () => {
   const port = 50052;
