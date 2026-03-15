@@ -1,9 +1,20 @@
 import * as grpc from "@grpc/grpc-js";
 import { ApiService } from "@repo/proto/index";
+import { isApiKeyValid } from "./services/auth.service.js";
 
 const handlers: ApiService.ApiProtoServiceServer = {
   validateApiKey: async (call, callback) => {
-    callback(null, { isValid: false });
+    const { hashedApiKey } = call.request;
+    isApiKeyValid(hashedApiKey)
+      .then((isValid) => {
+        callback(null, { isValid });
+      })
+      .catch((err) => {
+        callback({
+          code: grpc.status.INTERNAL,
+          message: err?.message || "Internal server error",
+        });
+      });
   },
 };
 

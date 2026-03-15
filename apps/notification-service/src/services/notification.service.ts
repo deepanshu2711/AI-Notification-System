@@ -31,8 +31,7 @@ export const sendNotification = async (
   //NOTE: CHECK API KEY HERE
 
   const isValid = await apiClient.validateApiKey(hashedApiKey);
-  console.log("isValid", isValid);
-  return;
+  if (!isValid) throw new AppError("Api Key is not valid", 401);
 
   //NOTE: FIRST CHECK IF THIS PROJECT EXISTS FROM MANAGEMENT SERVICE
   const projectExists = await projectClient.checkProjectExists(projectId);

@@ -50,3 +50,7 @@ export const getApiKey = async (userId: string) => {
     createdAt: apiKey.createdAt,
   };
 };
+
+export const isApiKeyValid = async (hashedKey: string): Promise<boolean> => {
+  return !!(await ApiKey.exists({ hashedKey }));
+};
