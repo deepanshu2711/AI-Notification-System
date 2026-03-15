@@ -172,7 +172,7 @@ export function TemplateOverview() {
 
       {/* --- Empty State --- */}
       {!isLoading && (!data || data.length === 0) && (
-        <div className="group relative flex flex-col items-center justify-center overflow-hidden rounded-3xl border border-dashed border-zinc-800 bg-zinc-900/20 py-24 text-center transition-all hover:bg-zinc-900/40">
+        <div className="group relative flex flex-col items-center justify-center overflow-hidden rounded-3xl border border-dashed border-zinc-800 bg-zinc-900/20 py-20 text-center transition-all hover:bg-zinc-900/40">
           <div className="absolute inset-0 bg-gradient-to-b from-purple-500/5 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
 
           <div className="relative z-10 mb-6 rounded-2xl bg-zinc-900 p-4 shadow-xl ring-1 ring-white/10">

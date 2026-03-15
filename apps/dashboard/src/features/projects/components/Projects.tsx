@@ -1,10 +1,24 @@
-import { LayoutGrid, Plus } from 'lucide-react' // Assuming Lucide icons
+'use client'
+
+import { LayoutGrid, Plus } from 'lucide-react'
+import { useState } from 'react'
+
+import { useCreateProjectMutation } from '../hooks/mutation/useCreateProjectMutation'
+import { CreateProjectModal } from './CreateProjectModal'
 import { ProjectMatricGrid } from './ProjectMatricsGrid'
 import { ProjectsOverview } from './ProjectsOverview'
 
 export default function Projects() {
+  const [showModal, setShowModal] = useState(false)
+  const { mutate: createProject } = useCreateProjectMutation()
+
+  const handleCreateProject = (name: string, description: string) => {
+    createProject({ name, description })
+  }
+
   return (
     <div className="min-h-screen rounded-xl bg-zinc-950 text-zinc-100 selection:bg-indigo-500/30">
+      <CreateProjectModal open={showModal} onClose={() => setShowModal(false)} onCreate={handleCreateProject} />
       <div className="relative z-10 mx-auto max-w-7xl space-y-10 px-6 py-10 lg:px-8">
         <div className="flex flex-col gap-6 border-b border-white/5 pb-8 md:flex-row md:items-end md:justify-between">
           <div className="space-y-2">
@@ -20,7 +34,10 @@ export default function Projects() {
           </div>
 
           <div className="flex items-center gap-3">
-            <button className="flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition-all hover:bg-indigo-500 hover:shadow-[0_0_15px_rgba(79,70,229,0.4)] active:scale-95">
+            <button
+              onClick={() => setShowModal(true)}
+              className="flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition-all hover:bg-indigo-500 hover:shadow-[0_0_15px_rgba(79,70,229,0.4)] active:scale-95"
+            >
               <Plus className="h-4 w-4" />
               <span>New Project</span>
             </button>

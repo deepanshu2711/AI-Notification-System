@@ -7,8 +7,7 @@ export class RabbitMQConnection {
   private static instance: RabbitMQConnection;
   private connection!: RabbitConnection;
   private channel!: Channel;
-  private url: string =
-    process.env.RABBITMQ_URL || "amqp://admin:admin@localhost:5672";
+  private url: string = process.env.RABBITMQ_URL || "amqp://localhost:5672";
 
   private constructor() {}
 

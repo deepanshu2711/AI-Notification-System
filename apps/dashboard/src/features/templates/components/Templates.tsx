@@ -1,10 +1,42 @@
+'use client'
+
 import { LayoutTemplate, Plus } from 'lucide-react'
+import { useState } from 'react'
+
+import { useCreateTemplateMutation } from '../hooks/mutation/useCreateTemplateMutation'
+import { TemplateVariable } from '../types/template'
+import { CreateTemplateModal } from './CreateTemplateModal'
 import { TemplateMatricGrid } from './TemplateMatricsGrid'
 import { TemplateOverview } from './TemplateOverview'
 
 const Templates = () => {
+  const [showModal, setShowModal] = useState(false)
+  const createTemplateMutation = useCreateTemplateMutation()
+
+  const handleCreateTemplate = async (templateData: {
+    name: string
+    channel: string
+    content: {
+      subject?: string
+      body?: string
+      message?: string
+      title?: string
+    }
+    variables: Record<string, TemplateVariable>
+    projectId: string
+  }) => {
+    try {
+      await createTemplateMutation.mutateAsync(templateData)
+      setShowModal(false)
+    } catch (error) {
+      console.error('Failed to create template:', error)
+    }
+  }
+
   return (
     <div className="min-h-screen rounded-xl bg-zinc-950 text-zinc-100 selection:bg-indigo-500/30">
+      <CreateTemplateModal open={showModal} onClose={() => setShowModal(false)} onCreate={handleCreateTemplate} />
+
       <div className="pointer-events-none fixed inset-0 z-0">
         <div className="absolute top-[-10%] left-[10%] h-[500px] w-[500px] rounded-full bg-purple-500/5 blur-[100px]" />
         <div className="absolute top-[20%] right-[10%] h-[500px] w-[500px] rounded-full bg-indigo-500/5 blur-[100px]" />
@@ -25,7 +57,10 @@ const Templates = () => {
           </div>
 
           <div className="flex items-center gap-3">
-            <button className="flex items-center gap-2 rounded-lg bg-purple-500 px-4 py-2 text-sm font-medium text-white transition-all hover:bg-purple-600 hover:shadow-[0_0_15px_rgba(79,70,229,0.4)] active:scale-95">
+            <button
+              onClick={() => setShowModal(true)}
+              className="flex items-center gap-2 rounded-lg bg-purple-500 px-4 py-2 text-sm font-medium text-white transition-all hover:bg-purple-600 hover:shadow-[0_0_15px_rgba(79,70,229,0.4)] active:scale-95"
+            >
               <Plus className="h-4 w-4" />
               <span>New Template</span>
             </button>

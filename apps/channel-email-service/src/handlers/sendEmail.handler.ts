@@ -31,7 +31,7 @@ export const sendEmailHandler = async (data: any) => {
       throw new AppError("Template not found", 400);
     }
 
-    const template = templateResponse.toObject();
+    const template = templateResponse;
     let { subject, body } = template.content ?? {};
 
     if (!template.aiGenerated && !body) {
