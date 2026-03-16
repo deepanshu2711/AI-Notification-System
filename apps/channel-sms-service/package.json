@@ -1,0 +1,23 @@
+{
+  "name": "channel-sms-service",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsx src/index.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@repo/config": "^1.0.0",
+    "@repo/rabbitmq": "^1.0.0",
+    "amqplib": "^0.10.9",
+    "dotenv": "^17.3.1",
+    "twilio": "^5.13.0"
+  }
+}

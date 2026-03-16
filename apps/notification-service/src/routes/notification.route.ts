@@ -4,6 +4,7 @@ import {
   getMessageStatus,
   getMessageEvents,
   getRecentNotifications,
+  getAllMessages,
 } from "../controllers/notification.controller.js";
 
 export const notificationRouter = express.Router();
@@ -12,3 +13,6 @@ notificationRouter.post("/send", sendNotification);
 notificationRouter.get("/messages/:id/status", getMessageStatus);
 notificationRouter.get("/messages/:id/events", getMessageEvents);
 notificationRouter.get("/recent/:globalUserId", getRecentNotifications);
+
+// Internal endpoints that use x-global-user-id header (proxied from API gateway)
+notificationRouter.get("/messages", getAllMessages);

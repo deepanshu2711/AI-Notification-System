@@ -64,3 +64,22 @@ export const getRecentNotifications = asyncHandler(
     successResponse(res, data);
   },
 );
+
+export const getAllMessages = asyncHandler(
+  async (req: Request, res: Response) => {
+    const globalUserId = req.headers["x-global-user-id"] as string;
+    if (!globalUserId) {
+      throw new AppError("User ID is required", 401);
+    }
+
+    console.log("global user Id", globalUserId);
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 20;
+    const data = await NotificationService.getAllMessages(
+      globalUserId,
+      page,
+      limit,
+    );
+    successResponse(res, data);
+  },
+);

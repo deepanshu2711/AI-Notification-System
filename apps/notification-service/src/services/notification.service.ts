@@ -55,6 +55,9 @@ export const sendNotification = async (
     event_type: "queued",
   });
 
+  //NOTE: FOR Testing
+  // await new Promise((resolve) => setTimeout(resolve, 5000));
+
   //NOTE: PUBLISH MESSAGE TO RABBITMQ
   await publishNotification.publishNotification({
     to,
@@ -140,4 +143,85 @@ export const getRecentNotifications = async (globalUserId: string) => {
       },
     },
   ]);
+};
+
+export const getAllMessages = async (
+  globalUserId: string,
+  page: number = 1,
+  limit: number = 20,
+) => {
+  const skip = (page - 1) * limit;
+
+  const messages = await Message.aggregate([
+    {
+      $match: {
+        globalUserId: globalUserId,
+      },
+    },
+    {
+      $lookup: {
+        from: "message_events",
+        localField: "_id",
+        foreignField: "messageId",
+        as: "messageEvents",
+      },
+    },
+    {
+      $addFields: {
+        latestMessageEvent: {
+          $arrayElemAt: [
+            {
+              $slice: [
+                {
+                  $sortArray: {
+                    input: "$messageEvents",
+                    sortBy: {
+                      createdAt: -1,
+                    },
+                  },
+                },
+                0,
+                1,
+              ],
+            },
+            0,
+          ],
+        },
+      },
+    },
+    {
+      $sort: {
+        createdAt: -1,
+      },
+    },
+    {
+      $skip: skip,
+    },
+    {
+      $limit: limit,
+    },
+    {
+      $project: {
+        _id: 1,
+        globalUserId: 1,
+        priority: 1,
+        to: 1,
+        projectId: 1,
+        createdAt: 1,
+        latestStatus: "$latestMessageEvent.event_type",
+      },
+    },
+  ]);
+
+  const total = await Message.countDocuments({ globalUserId });
+
+  return {
+    messages,
+    pagination: {
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    },
+  };
 };

@@ -15,7 +15,12 @@ export const sendEmailHandler = async (data: any) => {
     /** -------------------------
      *  Validate input
      *  ------------------------- */
-    const recipient = data?.to?.[0]?.destination;
+    // const recipient = data?.to?.[0]?.destination;
+    const recipient = data?.to?.find(
+      (type: { channel: string; destination: string }) =>
+        type.channel === "email",
+    ).destination;
+
     if (!recipient) {
       throw new AppError("Email destination not found", 400);
     }
