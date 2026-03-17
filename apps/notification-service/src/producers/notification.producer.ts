@@ -8,6 +8,7 @@ const getRoutingKey = (channel: ChannelType) => {
   const Map = {
     email: "notification.email",
     sms: "notification.sms",
+    whatsapp: "notification.whatsapp",
   };
   return Map[channel];
 };

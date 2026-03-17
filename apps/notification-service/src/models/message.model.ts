@@ -4,7 +4,7 @@ const ChannelSchema = new Schema(
   {
     channel: {
       type: String,
-      enum: ["email", "sms", "slack", "push"],
+      enum: ["email", "sms", "whatsapp", "push"],
       required: true,
     },
 
