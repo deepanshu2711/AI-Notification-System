@@ -5,22 +5,16 @@ import { Field, Label } from '@/components/typescript/fieldset'
 import { Input } from '@/components/typescript/input'
 import { Select } from '@/components/typescript/select'
 import { Textarea } from '@/components/typescript/textarea'
+import { TemplateChannels, TemplateVariable } from '@repo/types'
 import { useState } from 'react'
 import { useGetProjectsQuery } from '../../../features/projects/hooks/query/useGetProjectsQuery'
-import { TemplateVariable } from '../types/template'
 
 interface CreateTemplateModalProps {
   open: boolean
   onClose: () => void
   onCreate: (templateData: {
     name: string
-    channel: string
-    content: {
-      subject?: string
-      body?: string
-      message?: string
-      title?: string
-    }
+    channels: TemplateChannels
     variables: Record<string, TemplateVariable>
     projectId: string
   }) => void
@@ -28,9 +22,10 @@ interface CreateTemplateModalProps {
 
 export function CreateTemplateModal({ open, onClose, onCreate }: CreateTemplateModalProps) {
   const [name, setName] = useState('')
-  const [channel, setChannel] = useState('email')
-  const [subject, setSubject] = useState('')
-  const [body, setBody] = useState('')
+  const [emailSubject, setEmailSubject] = useState('')
+  const [emailBody, setEmailBody] = useState('')
+  const [smsBody, setSmsBody] = useState('')
+  const [whatsappBody, setWhatsappBody] = useState('')
   const [projectId, setProjectId] = useState('')
   const [variables, setVariables] = useState<Record<string, TemplateVariable>>({})
   const [newVariableName, setNewVariableName] = useState('')
@@ -66,44 +61,54 @@ export function CreateTemplateModal({ open, onClose, onCreate }: CreateTemplateM
   }
 
   const handleSubmit = () => {
-    const content: any = {
-      body,
+    const channels: TemplateChannels = {}
+
+    if (emailSubject || emailBody) {
+      channels.email = {
+        subject: emailSubject,
+        body: emailBody,
+      }
     }
 
-    if (channel === 'email') {
-      content.subject = subject
-    } else if (channel === 'push') {
-      content.title = subject
-    } else if (channel === 'sms' || channel === 'whatsapp') {
-      content.message = body
+    if (smsBody) {
+      channels.sms = {
+        body: smsBody,
+      }
+    }
+
+    if (whatsappBody) {
+      channels.whatsapp = {
+        body: whatsappBody,
+      }
     }
 
     onCreate({
       name,
-      channel,
-      content,
+      channels,
       variables,
       projectId,
     })
 
-    setName('')
-    setChannel('email')
-    setSubject('')
-    setBody('')
-    setVariables({})
-    setProjectId('')
+    resetForm()
     onClose()
   }
 
-  const handleCancel = () => {
+  const resetForm = () => {
     setName('')
-    setChannel('email')
-    setSubject('')
-    setBody('')
+    setEmailSubject('')
+    setEmailBody('')
+    setSmsBody('')
+    setWhatsappBody('')
     setVariables({})
     setProjectId('')
+  }
+
+  const handleCancel = () => {
+    resetForm()
     onClose()
   }
+
+  const isValid = name && projectId && (emailSubject || emailBody || smsBody || whatsappBody)
 
   return (
     <Dialog open={open} onClose={onClose} size="5xl">
@@ -114,63 +119,81 @@ export function CreateTemplateModal({ open, onClose, onCreate }: CreateTemplateM
       </DialogDescription>
 
       <DialogBody className="space-y-4">
-        {/* Top Section: Name & Metadata */}
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           <Field>
             <Label>Template Name</Label>
             <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="e.g., Order Confirmation" />
           </Field>
 
-          <div className="flex gap-4">
-            <Field className="flex-1">
-              <Label>Project</Label>
-              <Select value={projectId} onChange={(e) => setProjectId(e.target.value)}>
-                <option value="">Select project...</option>
-                {projects?.map((project) => (
-                  <option key={project._id} value={project._id}>
-                    {project.name}
-                  </option>
-                ))}
-              </Select>
-            </Field>
-
-            <Field className="w-1/3">
-              <Label>Channel</Label>
-              <Select value={channel} onChange={(e) => setChannel(e.target.value)}>
-                <option value="email">Email</option>
-              </Select>
-            </Field>
-          </div>
+          <Field>
+            <Label>Project</Label>
+            <Select value={projectId} onChange={(e) => setProjectId(e.target.value)}>
+              <option value="">Select project...</option>
+              {projects?.map((project) => (
+                <option key={project._id} value={project._id}>
+                  {project.name}
+                </option>
+              ))}
+            </Select>
+          </Field>
         </div>
 
         <hr className="border-white/5" />
 
-        {/* Content Section */}
-        <div className="space-y-4">
-          {(channel === 'email' || channel === 'push') && (
+        <div className="space-y-6">
+          <div className="rounded-2xl bg-blue-900/20 p-6 ring-1 ring-blue-500/20">
+            <h4 className="mb-4 text-sm font-semibold text-blue-400">Email Channel</h4>
+            <div className="space-y-4">
+              <Field>
+                <Label>Subject Line</Label>
+                <Input
+                  value={emailSubject}
+                  onChange={(e) => setEmailSubject(e.target.value)}
+                  placeholder={`e.g., Hello {{userName}}!`}
+                />
+              </Field>
+              <Field>
+                <Label>Email Body</Label>
+                <Textarea
+                  value={emailBody}
+                  onChange={(e) => setEmailBody(e.target.value)}
+                  placeholder="Type your email content here..."
+                  rows={4}
+                  className="font-mono text-sm"
+                />
+              </Field>
+            </div>
+          </div>
+
+          <div className="rounded-2xl bg-green-900/20 p-6 ring-1 ring-green-500/20">
+            <h4 className="mb-4 text-sm font-semibold text-green-400">SMS Channel</h4>
             <Field>
-              <Label>{channel === 'email' ? 'Subject Line' : 'Notification Title'}</Label>
-              <Input
-                value={subject}
-                onChange={(e) => setSubject(e.target.value)}
-                placeholder={`e.g., Hello {{userName}}!`}
+              <Label>SMS Body</Label>
+              <Textarea
+                value={smsBody}
+                onChange={(e) => setSmsBody(e.target.value)}
+                placeholder="Type your SMS content here..."
+                rows={3}
+                className="font-mono text-sm"
               />
             </Field>
-          )}
+          </div>
 
-          <Field>
-            <Label>{channel === 'email' ? 'Email Body' : 'Message Content'}</Label>
-            <Textarea
-              value={body}
-              onChange={(e) => setBody(e.target.value)}
-              placeholder="Type your message here..."
-              rows={6}
-              className="font-mono text-sm" // Mono helps distinguish variables
-            />
-          </Field>
+          <div className="rounded-2xl bg-emerald-900/20 p-6 ring-1 ring-emerald-500/20">
+            <h4 className="mb-4 text-sm font-semibold text-emerald-400">WhatsApp Channel</h4>
+            <Field>
+              <Label>WhatsApp Body</Label>
+              <Textarea
+                value={whatsappBody}
+                onChange={(e) => setWhatsappBody(e.target.value)}
+                placeholder="Type your WhatsApp content here..."
+                rows={3}
+                className="font-mono text-sm"
+              />
+            </Field>
+          </div>
         </div>
 
-        {/* Variables Section */}
         <div className="rounded-2xl bg-gray-900/50 p-6 ring-1 ring-white/10">
           <header className="mb-4 flex items-center justify-between">
             <div>
@@ -179,7 +202,6 @@ export function CreateTemplateModal({ open, onClose, onCreate }: CreateTemplateM
             </div>
           </header>
 
-          {/* Existing Variables List */}
           <div className="mb-6 space-y-2">
             {Object.entries(variables).map(([varName, varData]) => (
               <div
@@ -207,7 +229,6 @@ export function CreateTemplateModal({ open, onClose, onCreate }: CreateTemplateM
             ))}
           </div>
 
-          {/* Add New Variable Form - Visualized as a 'Sub-card' */}
           <div className="grid grid-cols-1 gap-4 rounded-xl bg-white/5 p-4 md:grid-cols-2">
             <Field>
               <Label className="text-[10px] tracking-wider text-gray-500 uppercase">Variable Name</Label>
@@ -262,11 +283,7 @@ export function CreateTemplateModal({ open, onClose, onCreate }: CreateTemplateM
         <Button outline onClick={handleCancel}>
           Cancel
         </Button>
-        <Button
-          onClick={handleSubmit}
-          disabled={!name || !body || !projectId}
-          className="bg-white text-black hover:bg-gray-200"
-        >
+        <Button onClick={handleSubmit} disabled={!isValid} className="bg-white text-black hover:bg-gray-200">
           Create Template
         </Button>
       </DialogActions>

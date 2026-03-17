@@ -3,8 +3,8 @@
 import { LayoutTemplate, Plus } from 'lucide-react'
 import { useState } from 'react'
 
+import { TemplateChannels, TemplateVariable } from '@repo/types'
 import { useCreateTemplateMutation } from '../hooks/mutation/useCreateTemplateMutation'
-import { TemplateVariable } from '../types/template'
 import { CreateTemplateModal } from './CreateTemplateModal'
 import { TemplateMatricGrid } from './TemplateMatricsGrid'
 import { TemplateOverview } from './TemplateOverview'
@@ -15,13 +15,7 @@ const Templates = () => {
 
   const handleCreateTemplate = async (templateData: {
     name: string
-    channel: string
-    content: {
-      subject?: string
-      body?: string
-      message?: string
-      title?: string
-    }
+    channels: TemplateChannels
     variables: Record<string, TemplateVariable>
     projectId: string
   }) => {

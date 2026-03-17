@@ -4,27 +4,23 @@ export interface TemplateVariable {
   example: string
 }
 
+export interface TemplateChannels {
+  email?: {
+    subject: string
+    body: string
+  }
+  sms?: {
+    body: string
+  }
+  whatsapp?: {
+    body: string
+  }
+}
+
 export interface Template {
   _id: string
   name: string
-  channel: 'email' | 'sms' | 'whatsapp' | 'push' | 'multi'
-  content: {
-    subject?: string
-    body?: string
-    message?: string
-    title?: string
-    email?: {
-      subject: string
-      body: string
-    }
-    sms?: {
-      message: string
-    }
-    push?: {
-      title: string
-      body: string
-    }
-  }
+  channels: TemplateChannels
   variables: Record<string, TemplateVariable>
   aiGenerated: boolean
   globalUserId: string
@@ -35,13 +31,7 @@ export interface Template {
 
 export interface CreateTemplateData {
   name: string
-  channel: string
-  content: {
-    subject?: string
-    body?: string
-    message?: string
-    title?: string
-  }
+  channels: TemplateChannels
   variables: Record<string, TemplateVariable>
   projectId: string
 }

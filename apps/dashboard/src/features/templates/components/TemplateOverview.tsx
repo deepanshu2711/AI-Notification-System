@@ -1,32 +1,37 @@
 'use client'
 
-import { Bell, Braces, Calendar, FileText, Layers, Mail, MessageSquare, Plus, Smartphone, Sparkles } from 'lucide-react'
+import { Calendar, Layers, Mail, MessageSquare, Plus, Smartphone, Sparkles } from 'lucide-react'
 import { useState } from 'react'
 
+import { TemplateChannels, TemplateVariable } from '@repo/types'
 import { useCreateTemplateMutation } from '../hooks/mutation/useCreateTemplateMutation'
 import { useGetTemplatesQuery } from '../hooks/query/useGetTemplatesQuery'
-import { TemplateVariable } from '../types/template'
 import { CreateTemplateModal } from './CreateTemplateModal'
 
-// --- Types ---
-interface Template {
-  _id: string
-  name: string
-  channel: 'email' | 'sms' | 'whatsapp' | 'push' | 'multi'
-  content: any
-  variables: Record<string, TemplateVariable>
-  aiGenerated: boolean
-  globalUserId: string
-  projectId: string
-  createdAt: string
-  updatedAt: string
-}
+const getChannelStyles = (channels: TemplateChannels) => {
+  const channelList: string[] = []
 
-// --- Helpers ---
+  if (channels.email) channelList.push('email')
+  if (channels.sms) channelList.push('sms')
+  if (channels.whatsapp) channelList.push('whatsapp')
 
-// Helper to get distinct styles and icons for channels
-const getChannelConfig = (channel: string) => {
-  switch (channel) {
+  if (channelList.length === 0) {
+    return {
+      color: 'text-zinc-400 bg-zinc-400/10 border-zinc-400/20',
+      icon: Layers,
+      label: 'No Channels',
+    }
+  }
+
+  if (channelList.length > 1) {
+    return {
+      color: 'text-orange-400 bg-orange-400/10 border-orange-400/20',
+      icon: Layers,
+      label: 'Multi-Channel',
+    }
+  }
+
+  switch (channelList[0]) {
     case 'email':
       return {
         color: 'text-blue-400 bg-blue-400/10 border-blue-400/20',
@@ -45,31 +50,28 @@ const getChannelConfig = (channel: string) => {
         icon: Smartphone,
         label: 'WhatsApp',
       }
-    case 'push':
-      return {
-        color: 'text-purple-400 bg-purple-400/10 border-purple-400/20',
-        icon: Bell,
-        label: 'Push',
-      }
-    case 'multi':
-      return {
-        color: 'text-orange-400 bg-orange-400/10 border-orange-400/20',
-        icon: Layers,
-        label: 'Multi-Channel',
-      }
     default:
       return {
         color: 'text-zinc-400 bg-zinc-400/10 border-zinc-400/20',
-        icon: FileText,
+        icon: Layers,
         label: 'Draft',
       }
   }
 }
 
-// Helper to extract a preview string from the dynamic content object
-const getContentPreview = (content: any): string => {
-  if (!content) return 'No content defined...'
-  return content.body || content.message || content.title || content.subject || 'No preview available'
+const getContentPreview = (channels: TemplateChannels | undefined): string => {
+  if (!channels) return 'No content defined...'
+
+  const previews: string[] = []
+
+  if (channels.email?.subject) previews.push(`Subject: ${channels.email.subject}`)
+  if (channels.email?.body) previews.push(`Body: ${channels.email.body}`)
+  if (channels.sms?.body) previews.push(`SMS: ${channels.sms.body}`)
+  if (channels.whatsapp?.body) previews.push(`WhatsApp: ${channels.whatsapp.body}`)
+
+  if (previews.length === 0) return 'No content defined...'
+
+  return previews.join(' | ')
 }
 
 export function TemplateOverview() {
@@ -79,13 +81,7 @@ export function TemplateOverview() {
 
   const handleCreateTemplate = async (templateData: {
     name: string
-    channel: string
-    content: {
-      subject?: string
-      body?: string
-      message?: string
-      title?: string
-    }
+    channels: TemplateChannels
     variables: Record<string, TemplateVariable>
     projectId: string
   }) => {
@@ -104,7 +100,7 @@ export function TemplateOverview() {
       {!isLoading && data && data.length > 0 ? (
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {data.map((template) => {
-            const channelStyle = getChannelConfig(template.channel)
+            const channelStyle = getChannelStyles(template.channels)
             const ChannelIcon = channelStyle.icon
 
             return (
@@ -112,7 +108,6 @@ export function TemplateOverview() {
                 key={template._id}
                 className="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-white/5 bg-zinc-900/50 p-6 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-zinc-700 hover:bg-zinc-900/80 hover:shadow-xl"
               >
-                {/* --- Card Header --- */}
                 <div className="mb-4 flex items-start justify-between gap-4">
                   <div className="flex-1 space-y-1">
                     <h3 className="line-clamp-1 font-semibold text-zinc-100 group-hover:text-white">{template.name}</h3>
@@ -121,38 +116,30 @@ export function TemplateOverview() {
                     </div>
                   </div>
 
-                  {/* Channel Badge */}
                   <div className={`flex h-8 w-8 items-center justify-center rounded-lg border ${channelStyle.color}`}>
                     <ChannelIcon className="h-4 w-4" />
                   </div>
                 </div>
 
-                {/* --- Content Preview --- */}
                 <div className="mb-6 flex-1">
                   <div className="rounded-lg border border-white/5 bg-black/20 p-3">
                     <p className="line-clamp-3 font-mono text-xs leading-relaxed text-zinc-400">
-                      "{getContentPreview(template.content)}"
+                      "{getContentPreview(template.channels)}"
                     </p>
                   </div>
                 </div>
 
-                {/* --- Card Footer --- */}
                 <div className="flex items-center justify-between border-t border-white/5 pt-4">
-                  {/* Left: Metadata */}
                   <div className="flex items-center gap-3">
-                    {/* Variables Count */}
                     <div className="flex items-center gap-1.5 text-xs text-zinc-500" title="Variables">
-                      <Braces className="h-3 w-3" />
-                      <span>{Object.keys(template.variables).length}</span>
+                      <span className="font-mono">{Object.keys(template.variables).length} vars</span>
                     </div>
-                    {/* Date */}
                     <div className="flex items-center gap-1.5 text-xs text-zinc-500">
                       <Calendar className="h-3 w-3" />
                       <span>{new Date(template.createdAt).toLocaleDateString()}</span>
                     </div>
                   </div>
 
-                  {/* Right: AI Badge or Status */}
                   {template.aiGenerated ? (
                     <div className="flex items-center gap-1 rounded-full bg-indigo-500/10 px-2 py-0.5 text-[10px] font-medium text-indigo-400 ring-1 ring-indigo-500/20 ring-inset">
                       <Sparkles className="h-3 w-3" />
@@ -170,7 +157,6 @@ export function TemplateOverview() {
         </div>
       ) : null}
 
-      {/* --- Empty State --- */}
       {!isLoading && (!data || data.length === 0) && (
         <div className="group relative flex flex-col items-center justify-center overflow-hidden rounded-3xl border border-dashed border-zinc-800 bg-zinc-900/20 py-20 text-center transition-all hover:bg-zinc-900/40">
           <div className="absolute inset-0 bg-gradient-to-b from-purple-500/5 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />

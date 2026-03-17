@@ -1,7 +1,6 @@
 'use client'
 
 import { ClipboardIcon } from '@/components/icons/clipboard-icon'
-import { CogIcon } from '@/components/icons/cog-icon'
 import { DocumentIcon } from '@/components/icons/document-icon'
 import { HomeIcon } from '@/components/icons/home-icon'
 import { InboxIcon } from '@/components/icons/inbox-icon'
@@ -54,10 +53,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 <SidebarItem href="/dashboard/logs" current={pathname === '/dashboard/logs'}>
                   <ClipboardIcon />
                   <SidebarLabel>Logs</SidebarLabel>
-                </SidebarItem>
-                <SidebarItem href="/dashboard/settings" current={pathname === '/dashboard/settings'}>
-                  <CogIcon />
-                  <SidebarLabel>Settings</SidebarLabel>
                 </SidebarItem>
               </SidebarSection>
             </SidebarBody>

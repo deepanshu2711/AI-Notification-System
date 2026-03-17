@@ -1,5 +1,5 @@
 import api from '@/lib/api'
-import { CreateTemplateData, Template } from '../types/template'
+import { CreateTemplateData, Template } from '@repo/types'
 
 export const TemplateService = {
   getTemplate: async (): Promise<Template[]> => {
