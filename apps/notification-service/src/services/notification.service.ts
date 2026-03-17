@@ -64,6 +64,7 @@ export const sendNotification = async (
     messageId: createdMessage._id,
     templateId,
     variables,
+    template,
   });
 
   return createdMessage;

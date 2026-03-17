@@ -25,18 +25,7 @@ export const sendEmailHandler = async (data: any) => {
       throw new AppError("Email destination not found", 400);
     }
 
-    /** -------------------------
-     *  Fetch template
-     *  ------------------------- */
-    const templateResponse = await templateClient.getTemplateDetails(
-      data.templateId,
-    );
-
-    if (!templateResponse) {
-      throw new AppError("Template not found", 400);
-    }
-
-    const template = templateResponse;
+    const template = data.template;
     let { subject, body } = template.channels?.email ?? {};
 
     if (!template.aiGenerated && !body) {
