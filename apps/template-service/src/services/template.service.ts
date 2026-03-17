@@ -39,8 +39,7 @@ import { Template } from "../models/template.model.js";
 
 export const createTemplate = async (
   name: string,
-  channel: string,
-  content: any,
+  channels: any,
   variables: any,
   projectId: string,
   globalUserId: string,
@@ -51,8 +50,7 @@ export const createTemplate = async (
   //NOTE: create Template
   const template = await Template.create({
     name,
-    channel,
-    content,
+    channels,
     variables,
     projectId,
     globalUserId,

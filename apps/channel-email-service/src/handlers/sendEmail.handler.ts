@@ -37,7 +37,7 @@ export const sendEmailHandler = async (data: any) => {
     }
 
     const template = templateResponse;
-    let { subject, body } = template.content ?? {};
+    let { subject, body } = template.channels?.email ?? {};
 
     if (!template.aiGenerated && !body) {
       throw new AppError("Email body is empty", 400);

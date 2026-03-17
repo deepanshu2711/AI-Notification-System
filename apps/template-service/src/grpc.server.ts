@@ -27,8 +27,26 @@ const handlers: TemplateService.TemplateProtoServiceServer = {
         const response = TemplateService.GetTemplateDetailsResponse.create({
           id: data._id.toString(),
           name: data.name,
-          channel: data.channel,
-          content: data.content,
+          channels: {
+            email: data.channels?.email
+              ? {
+                  subject: data.channels.email.subject ?? "",
+                  body: data.channels.email.body ?? "",
+                }
+              : undefined,
+
+            sms: data.channels?.sms
+              ? {
+                  body: data.channels.sms.body ?? "",
+                }
+              : undefined,
+
+            whatsapp: data.channels?.whatsapp
+              ? {
+                  body: data.channels.whatsapp.body ?? "",
+                }
+              : undefined,
+          },
           variables: data.variables,
           aiGenerated: data.aiGenerated,
           globalUserId: data.globalUserId,

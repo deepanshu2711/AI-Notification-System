@@ -23,22 +23,29 @@ export interface GetTemplateDetailsRequest {
   templateId: string;
 }
 
-export interface TemplateContent {
-  /** For non-AI templates */
+export interface EmailChannel {
   subject: string;
   body: string;
-  /** For AI templates */
-  systemPrompt: string;
-  userPrompt: string;
-  tone: string;
-  maxLength: number;
+}
+
+export interface SmsChannel {
+  body: string;
+}
+
+export interface WhatsappChannel {
+  body: string;
+}
+
+export interface TemplateChannels {
+  email: EmailChannel | undefined;
+  sms: SmsChannel | undefined;
+  whatsapp: WhatsappChannel | undefined;
 }
 
 export interface GetTemplateDetailsResponse {
   id: string;
   name: string;
-  channel: string;
-  content: TemplateContent | undefined;
+  channels: TemplateChannels | undefined;
   variables: string;
   aiGenerated: boolean;
   globalUserId: string;
@@ -105,37 +112,25 @@ export const GetTemplateDetailsRequest: MessageFns<GetTemplateDetailsRequest> = 
   },
 };
 
-function createBaseTemplateContent(): TemplateContent {
-  return { subject: "", body: "", systemPrompt: "", userPrompt: "", tone: "", maxLength: 0 };
+function createBaseEmailChannel(): EmailChannel {
+  return { subject: "", body: "" };
 }
 
-export const TemplateContent: MessageFns<TemplateContent> = {
-  encode(message: TemplateContent, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+export const EmailChannel: MessageFns<EmailChannel> = {
+  encode(message: EmailChannel, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.subject !== "") {
       writer.uint32(10).string(message.subject);
     }
     if (message.body !== "") {
       writer.uint32(18).string(message.body);
     }
-    if (message.systemPrompt !== "") {
-      writer.uint32(26).string(message.systemPrompt);
-    }
-    if (message.userPrompt !== "") {
-      writer.uint32(34).string(message.userPrompt);
-    }
-    if (message.tone !== "") {
-      writer.uint32(42).string(message.tone);
-    }
-    if (message.maxLength !== 0) {
-      writer.uint32(48).int32(message.maxLength);
-    }
     return writer;
   },
 
-  decode(input: BinaryReader | Uint8Array, length?: number): TemplateContent {
+  decode(input: BinaryReader | Uint8Array, length?: number): EmailChannel {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     const end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseTemplateContent();
+    const message = createBaseEmailChannel();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -155,36 +150,69 @@ export const TemplateContent: MessageFns<TemplateContent> = {
           message.body = reader.string();
           continue;
         }
-        case 3: {
-          if (tag !== 26) {
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): EmailChannel {
+    return {
+      subject: isSet(object.subject) ? globalThis.String(object.subject) : "",
+      body: isSet(object.body) ? globalThis.String(object.body) : "",
+    };
+  },
+
+  toJSON(message: EmailChannel): unknown {
+    const obj: any = {};
+    if (message.subject !== "") {
+      obj.subject = message.subject;
+    }
+    if (message.body !== "") {
+      obj.body = message.body;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<EmailChannel>, I>>(base?: I): EmailChannel {
+    return EmailChannel.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<EmailChannel>, I>>(object: I): EmailChannel {
+    const message = createBaseEmailChannel();
+    message.subject = object.subject ?? "";
+    message.body = object.body ?? "";
+    return message;
+  },
+};
+
+function createBaseSmsChannel(): SmsChannel {
+  return { body: "" };
+}
+
+export const SmsChannel: MessageFns<SmsChannel> = {
+  encode(message: SmsChannel, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.body !== "") {
+      writer.uint32(10).string(message.body);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): SmsChannel {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSmsChannel();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
             break;
           }
 
-          message.systemPrompt = reader.string();
-          continue;
-        }
-        case 4: {
-          if (tag !== 34) {
-            break;
-          }
-
-          message.userPrompt = reader.string();
-          continue;
-        }
-        case 5: {
-          if (tag !== 42) {
-            break;
-          }
-
-          message.tone = reader.string();
-          continue;
-        }
-        case 6: {
-          if (tag !== 48) {
-            break;
-          }
-
-          message.maxLength = reader.int32();
+          message.body = reader.string();
           continue;
         }
       }
@@ -196,51 +224,178 @@ export const TemplateContent: MessageFns<TemplateContent> = {
     return message;
   },
 
-  fromJSON(object: any): TemplateContent {
-    return {
-      subject: isSet(object.subject) ? globalThis.String(object.subject) : "",
-      body: isSet(object.body) ? globalThis.String(object.body) : "",
-      systemPrompt: isSet(object.systemPrompt) ? globalThis.String(object.systemPrompt) : "",
-      userPrompt: isSet(object.userPrompt) ? globalThis.String(object.userPrompt) : "",
-      tone: isSet(object.tone) ? globalThis.String(object.tone) : "",
-      maxLength: isSet(object.maxLength) ? globalThis.Number(object.maxLength) : 0,
-    };
+  fromJSON(object: any): SmsChannel {
+    return { body: isSet(object.body) ? globalThis.String(object.body) : "" };
   },
 
-  toJSON(message: TemplateContent): unknown {
+  toJSON(message: SmsChannel): unknown {
     const obj: any = {};
-    if (message.subject !== "") {
-      obj.subject = message.subject;
-    }
     if (message.body !== "") {
       obj.body = message.body;
-    }
-    if (message.systemPrompt !== "") {
-      obj.systemPrompt = message.systemPrompt;
-    }
-    if (message.userPrompt !== "") {
-      obj.userPrompt = message.userPrompt;
-    }
-    if (message.tone !== "") {
-      obj.tone = message.tone;
-    }
-    if (message.maxLength !== 0) {
-      obj.maxLength = Math.round(message.maxLength);
     }
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<TemplateContent>, I>>(base?: I): TemplateContent {
-    return TemplateContent.fromPartial(base ?? ({} as any));
+  create<I extends Exact<DeepPartial<SmsChannel>, I>>(base?: I): SmsChannel {
+    return SmsChannel.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<TemplateContent>, I>>(object: I): TemplateContent {
-    const message = createBaseTemplateContent();
-    message.subject = object.subject ?? "";
+  fromPartial<I extends Exact<DeepPartial<SmsChannel>, I>>(object: I): SmsChannel {
+    const message = createBaseSmsChannel();
     message.body = object.body ?? "";
-    message.systemPrompt = object.systemPrompt ?? "";
-    message.userPrompt = object.userPrompt ?? "";
-    message.tone = object.tone ?? "";
-    message.maxLength = object.maxLength ?? 0;
+    return message;
+  },
+};
+
+function createBaseWhatsappChannel(): WhatsappChannel {
+  return { body: "" };
+}
+
+export const WhatsappChannel: MessageFns<WhatsappChannel> = {
+  encode(message: WhatsappChannel, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.body !== "") {
+      writer.uint32(10).string(message.body);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): WhatsappChannel {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseWhatsappChannel();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.body = reader.string();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): WhatsappChannel {
+    return { body: isSet(object.body) ? globalThis.String(object.body) : "" };
+  },
+
+  toJSON(message: WhatsappChannel): unknown {
+    const obj: any = {};
+    if (message.body !== "") {
+      obj.body = message.body;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<WhatsappChannel>, I>>(base?: I): WhatsappChannel {
+    return WhatsappChannel.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<WhatsappChannel>, I>>(object: I): WhatsappChannel {
+    const message = createBaseWhatsappChannel();
+    message.body = object.body ?? "";
+    return message;
+  },
+};
+
+function createBaseTemplateChannels(): TemplateChannels {
+  return { email: undefined, sms: undefined, whatsapp: undefined };
+}
+
+export const TemplateChannels: MessageFns<TemplateChannels> = {
+  encode(message: TemplateChannels, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.email !== undefined) {
+      EmailChannel.encode(message.email, writer.uint32(10).fork()).join();
+    }
+    if (message.sms !== undefined) {
+      SmsChannel.encode(message.sms, writer.uint32(18).fork()).join();
+    }
+    if (message.whatsapp !== undefined) {
+      WhatsappChannel.encode(message.whatsapp, writer.uint32(26).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): TemplateChannels {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseTemplateChannels();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.email = EmailChannel.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.sms = SmsChannel.decode(reader, reader.uint32());
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.whatsapp = WhatsappChannel.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): TemplateChannels {
+    return {
+      email: isSet(object.email) ? EmailChannel.fromJSON(object.email) : undefined,
+      sms: isSet(object.sms) ? SmsChannel.fromJSON(object.sms) : undefined,
+      whatsapp: isSet(object.whatsapp) ? WhatsappChannel.fromJSON(object.whatsapp) : undefined,
+    };
+  },
+
+  toJSON(message: TemplateChannels): unknown {
+    const obj: any = {};
+    if (message.email !== undefined) {
+      obj.email = EmailChannel.toJSON(message.email);
+    }
+    if (message.sms !== undefined) {
+      obj.sms = SmsChannel.toJSON(message.sms);
+    }
+    if (message.whatsapp !== undefined) {
+      obj.whatsapp = WhatsappChannel.toJSON(message.whatsapp);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<TemplateChannels>, I>>(base?: I): TemplateChannels {
+    return TemplateChannels.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<TemplateChannels>, I>>(object: I): TemplateChannels {
+    const message = createBaseTemplateChannels();
+    message.email = (object.email !== undefined && object.email !== null)
+      ? EmailChannel.fromPartial(object.email)
+      : undefined;
+    message.sms = (object.sms !== undefined && object.sms !== null) ? SmsChannel.fromPartial(object.sms) : undefined;
+    message.whatsapp = (object.whatsapp !== undefined && object.whatsapp !== null)
+      ? WhatsappChannel.fromPartial(object.whatsapp)
+      : undefined;
     return message;
   },
 };
@@ -249,8 +404,7 @@ function createBaseGetTemplateDetailsResponse(): GetTemplateDetailsResponse {
   return {
     id: "",
     name: "",
-    channel: "",
-    content: undefined,
+    channels: undefined,
     variables: "",
     aiGenerated: false,
     globalUserId: "",
@@ -268,29 +422,26 @@ export const GetTemplateDetailsResponse: MessageFns<GetTemplateDetailsResponse> 
     if (message.name !== "") {
       writer.uint32(18).string(message.name);
     }
-    if (message.channel !== "") {
-      writer.uint32(26).string(message.channel);
-    }
-    if (message.content !== undefined) {
-      TemplateContent.encode(message.content, writer.uint32(34).fork()).join();
+    if (message.channels !== undefined) {
+      TemplateChannels.encode(message.channels, writer.uint32(26).fork()).join();
     }
     if (message.variables !== "") {
-      writer.uint32(42).string(message.variables);
+      writer.uint32(34).string(message.variables);
     }
     if (message.aiGenerated !== false) {
-      writer.uint32(48).bool(message.aiGenerated);
+      writer.uint32(40).bool(message.aiGenerated);
     }
     if (message.globalUserId !== "") {
-      writer.uint32(58).string(message.globalUserId);
+      writer.uint32(50).string(message.globalUserId);
     }
     if (message.projectId !== "") {
-      writer.uint32(66).string(message.projectId);
+      writer.uint32(58).string(message.projectId);
     }
     if (message.createdAt !== "") {
-      writer.uint32(74).string(message.createdAt);
+      writer.uint32(66).string(message.createdAt);
     }
     if (message.updatedAt !== "") {
-      writer.uint32(82).string(message.updatedAt);
+      writer.uint32(74).string(message.updatedAt);
     }
     return writer;
   },
@@ -323,7 +474,7 @@ export const GetTemplateDetailsResponse: MessageFns<GetTemplateDetailsResponse> 
             break;
           }
 
-          message.channel = reader.string();
+          message.channels = TemplateChannels.decode(reader, reader.uint32());
           continue;
         }
         case 4: {
@@ -331,23 +482,23 @@ export const GetTemplateDetailsResponse: MessageFns<GetTemplateDetailsResponse> 
             break;
           }
 
-          message.content = TemplateContent.decode(reader, reader.uint32());
-          continue;
-        }
-        case 5: {
-          if (tag !== 42) {
-            break;
-          }
-
           message.variables = reader.string();
           continue;
         }
-        case 6: {
-          if (tag !== 48) {
+        case 5: {
+          if (tag !== 40) {
             break;
           }
 
           message.aiGenerated = reader.bool();
+          continue;
+        }
+        case 6: {
+          if (tag !== 50) {
+            break;
+          }
+
+          message.globalUserId = reader.string();
           continue;
         }
         case 7: {
@@ -355,7 +506,7 @@ export const GetTemplateDetailsResponse: MessageFns<GetTemplateDetailsResponse> 
             break;
           }
 
-          message.globalUserId = reader.string();
+          message.projectId = reader.string();
           continue;
         }
         case 8: {
@@ -363,19 +514,11 @@ export const GetTemplateDetailsResponse: MessageFns<GetTemplateDetailsResponse> 
             break;
           }
 
-          message.projectId = reader.string();
+          message.createdAt = reader.string();
           continue;
         }
         case 9: {
           if (tag !== 74) {
-            break;
-          }
-
-          message.createdAt = reader.string();
-          continue;
-        }
-        case 10: {
-          if (tag !== 82) {
             break;
           }
 
@@ -395,8 +538,7 @@ export const GetTemplateDetailsResponse: MessageFns<GetTemplateDetailsResponse> 
     return {
       id: isSet(object.id) ? globalThis.String(object.id) : "",
       name: isSet(object.name) ? globalThis.String(object.name) : "",
-      channel: isSet(object.channel) ? globalThis.String(object.channel) : "",
-      content: isSet(object.content) ? TemplateContent.fromJSON(object.content) : undefined,
+      channels: isSet(object.channels) ? TemplateChannels.fromJSON(object.channels) : undefined,
       variables: isSet(object.variables) ? globalThis.String(object.variables) : "",
       aiGenerated: isSet(object.aiGenerated) ? globalThis.Boolean(object.aiGenerated) : false,
       globalUserId: isSet(object.globalUserId) ? globalThis.String(object.globalUserId) : "",
@@ -414,11 +556,8 @@ export const GetTemplateDetailsResponse: MessageFns<GetTemplateDetailsResponse> 
     if (message.name !== "") {
       obj.name = message.name;
     }
-    if (message.channel !== "") {
-      obj.channel = message.channel;
-    }
-    if (message.content !== undefined) {
-      obj.content = TemplateContent.toJSON(message.content);
+    if (message.channels !== undefined) {
+      obj.channels = TemplateChannels.toJSON(message.channels);
     }
     if (message.variables !== "") {
       obj.variables = message.variables;
@@ -448,9 +587,8 @@ export const GetTemplateDetailsResponse: MessageFns<GetTemplateDetailsResponse> 
     const message = createBaseGetTemplateDetailsResponse();
     message.id = object.id ?? "";
     message.name = object.name ?? "";
-    message.channel = object.channel ?? "";
-    message.content = (object.content !== undefined && object.content !== null)
-      ? TemplateContent.fromPartial(object.content)
+    message.channels = (object.channels !== undefined && object.channels !== null)
+      ? TemplateChannels.fromPartial(object.channels)
       : undefined;
     message.variables = object.variables ?? "";
     message.aiGenerated = object.aiGenerated ?? false;

@@ -10,26 +10,33 @@ message GetTemplateDetailsRequest {
   string templateId =1;
 }
 
-message TemplateContent {
-  // For non-AI templates
+message EmailChannel {
   string subject = 1;
   string body = 2;
-  // For AI templates
-  string systemPrompt = 3;
-  string userPrompt = 4;
-  string tone = 5;
-  int32 maxLength = 6;
+}
+
+message SmsChannel {
+  string body = 1;
+}
+
+message WhatsappChannel {
+  string body = 1;
+}
+
+message TemplateChannels {
+  EmailChannel email = 1;
+  SmsChannel sms = 2;
+  WhatsappChannel whatsapp = 3;
 }
 
 message GetTemplateDetailsResponse {
   string id = 1;
   string name = 2;
-  string channel = 3;
-  TemplateContent content = 4;
-  string variables = 5;   
-  bool aiGenerated = 6;
-  string globalUserId = 7;
-  string projectId = 8;
-  string createdAt = 9;
-  string updatedAt = 10;
+  TemplateChannels channels = 3;
+  string variables = 4;   
+  bool aiGenerated = 5;
+  string globalUserId = 6;
+  string projectId = 7;
+  string createdAt = 8;
+  string updatedAt = 9;
 }
